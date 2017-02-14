@@ -249,6 +249,7 @@
                 if (os.name.contains("Windows"))
                 {
                     os.platform = "Windows";
+					os.version = os.name.replace("Windows ", "");
                 }
                 else if (os.name === "Android")
                 {
@@ -263,7 +264,8 @@
                 else if (os.name === "Mac OS X")
                 {
                     os.platform = "Mac OS X";
-                    os.name = navigator.userAgent.match(/Mac\s+OS\s+X[^\)]*\)/g)[0].replace(")", "").replace(/_/g, ".");
+                    os.name = navigator.userAgent.match(/[Mm]ac\s*OS\s*[X]\s*(\d*.\d*)/g)[0].replace(")", "").replace(/_/g, ".");
+					os.version = navigator.userAgent.match(/[Mm]ac\s*OS\s*[X]\s*(\d*.\d*.\d*)/g)[0].replace(/[Mm]ac\s*OS\s*[X]\s*/g, "").replace(/_/g, ".");
                 }
 
 				if (navigator.platform.contains("arm") || navigator.userAgent.contains("arm", true) )
@@ -285,6 +287,8 @@
             }
         }
     
+		console.debug("os: " + JSON.stringify(os, undefined, 4));
+	
         switchDownload(
             os.name.contains("Ubuntu") ? "Ubuntu" : os.platform
             , os.arch
