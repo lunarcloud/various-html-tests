@@ -381,11 +381,12 @@
         
         document.getElementById("minimum-requirements").textContent = "Requires " + minimumRequirements[arch][os];
         
-        document.getElementById("main-platform").textContent = os == "Mac OS X" ? os 
-        :   (arch == "amd64" ? os + " (64-bit)"
-                : arch == "x86" ? os + " (32-bit)" 
-                : os + " (" + arch + ")"
-            );
+        document.getElementById("main-platform").textContent = 
+		os == "Mac OS X" ? os 
+        :   ( arch == "amd64" ? os + " (64-bit)"
+			: arch == "x86" ? os + " (32-bit)" 
+			: os + " (" + arch + ")"
+		);
     }
     
 </script>
