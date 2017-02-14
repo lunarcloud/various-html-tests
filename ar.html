@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Basic Page Needs
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    <title>Software Project</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="theme-color" content="white" />
+
+    <!-- Mobile Specific Metas
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONT
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link href="https://cdn.rawgit.com/Lukas-W/font-linux/v0.5/assets/font-linux.css" rel="stylesheet">
+
+    <!-- CSS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+
+    <!-- Favicon
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="icon" type="image/png" href="https://placehold.it/32x32">
+
+    <style>
+    
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+        }
+
+        .pointer {
+            cursor: pointer;
+        }
+                
+        video {
+            max-width: 100%;
+            min-height: 160px;
+            min-width: 160px;
+        }
+        
+    </style>
+</head>
+<body onload="onLoad();" class="hidden-menu-mobile">
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+  <div class="container">
+  
+        
+    <div class="row" style="margin-top: 4px;">
+      <div class="six columns">
+        <h2>Software Project</h2>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="twelve columns">
+        <video id="live-feed" autoplay></video>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="twelve columns">
+        <label id="camera-change-label" style="display: none;">Select Camera</label>
+        <select id="camera-select" onchange="selectCamera(this.value)">
+        </select>
+      </div>
+    </div>
+    
+    
+  </div>
+  
+  <footer">
+      <div class="container">
+        <div class="row">
+          <div class="twelve columns">
+            <hr>
+            &copy; Samuel Sarette 2016
+          </div>
+        </div>
+      </div>
+  </footer>
+
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<script>
+
+    String.prototype.contains = function (searchString, caseInsensitive ) {
+        if (caseInsensitive !== true) return this.indexOf(searchString) >= 0;
+        else  return this.toLowerCase().indexOf(searchString) >= 0;
+    }
+    
+    function hasMediaDeviceEnumeration() {
+        return !(!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices);
+    }
+    function hasMediaDevicesGetUserMedia() {
+        return !(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia);
+    }
+
+    function hasGetUserMedia() {
+        if (!!navigator.getUserMedia) {
+            return true;
+        } else if (!!navigator.webkitGetUserMedia) {
+            navigator.getUserMedia = navigator.webkitGetUserMedia;
+            return true;
+        } else if (!!navigator.mozGetUserMedia) {
+            navigator.getUserMedia = navigator.mozGetUserMedia;
+            return true;
+        } else if (!!navigator.msGetUserMedia) {
+            navigator.getUserMedia = navigator.msGetUserMedia;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    function selectCamera(id) {            
+        if (!hasMediaDevicesGetUserMedia()) {
+          alert('getUserMedia() is not supported in your browser');
+          return;
+        }
+        
+        rememberedCamera = id;
+        localStorage.setItem("camera", id);
+        
+        if (cameraChangeLabel.textContent == "Change Camera") {
+            window.location.reload();
+        }
+        
+        try {
+            var nullCameraOption = document.getElementById("null-camera");
+            nullCameraOption.parentNode.removeChild(nullCameraOption);
+        } catch (e) {}
+        
+        navigator.mediaDevices.getUserMedia({video: { optional: [{sourceId: id}] }})
+        .then(function(localMediaStream) {
+            liveFeedElement.src = window.URL.createObjectURL(localMediaStream);
+            cameraChangeLabel.textContent = "Change Camera";
+            
+            // Note: onloadedmetadata doesn't fire in Chrome when using it with getUserMedia.
+            // See crbug.com/110938.
+            liveFeedElement.onloadedmetadata = function(e) {
+              // Ready to go. Do some stuff.
+            };
+        }).catch(function(e) {
+            console.log('Reeeejected!', e);
+        });
+    }
+    
+    var cameraSelector;
+    var liveFeedElement;
+    var cameraChangeLabel;
+    
+    var rememberedCamera = localStorage.getItem("camera");
+    var onLoadFailSafe = setTimeout(onLoad, 5000);
+    
+
+    function onLoad() {
+        
+        cameraSelector = document.getElementById("camera-select");
+        liveFeedElement = document.getElementById("live-feed");
+        cameraChangeLabel = document.getElementById("camera-change-label");
+        
+        if (typeof(rememberedCamera) === "string" && rememberedCamera.length > 2) {
+            selectCamera(rememberedCamera);
+        } else {
+            var opt = document.createElement('option');
+            opt.id = "null-camera";
+            opt.value = "none";
+            opt.selected = true;
+            opt.innerHTML = "Select Camera";
+            cameraSelector.appendChild(opt);
+        }
+    
+        if (hasMediaDeviceEnumeration()) {
+            // List cameras and microphones.
+            navigator.mediaDevices.enumerateDevices()
+              .then(function(devices) {
+                sourceDevices = devices;
+                devices.forEach(function(device) {
+                    if (device.kind === 'videoinput') {
+                        var opt = document.createElement('option');
+                        opt.value = device.deviceId;
+                        if (rememberedCamera === device.deviceId ) {
+                            opt.selected = true;
+                        }
+                        opt.innerHTML = device.label.trim() == "" 
+                            ? "Camera " + cameraSelector.options.length
+                            : device.label;
+                        cameraSelector.appendChild(opt);
+                    }
+                });
+              })
+              .catch(function(error) {
+                console.log(error.name + ": " + error.message);
+              });
+        } else {
+            console.log("enumerateDevices() not supported.");
+        }
+        
+        clearTimeout(onLoadFailSafe);
+    }
+    
+</script>
+</body>
+</html>

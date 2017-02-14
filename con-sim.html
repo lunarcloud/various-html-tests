@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Basic Page Needs
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    <title>Software Project</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="theme-color" content="white" />
+
+    <!-- Mobile Specific Metas
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONT
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link href="http://cdn.rawgit.com/Lukas-W/font-linux/v0.5/assets/font-linux.css" rel="stylesheet">
+
+    <!-- CSS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+
+    <!-- Favicon
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="icon" type="image/png" href="https://placehold.it/32x32">
+
+    <style>
+    
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+        }
+
+        .pointer {
+            cursor: pointer;
+        }
+        
+    </style>
+</head>
+<body onload="onLoad()" class="hidden-menu-mobile">
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+  <div class="container">
+  
+        
+    <div class="row" style="margin-top: 4px;">
+      <div class="six columns">
+        <h2>Tests</h2>
+      </div>
+    </div>
+
+<div id="choice-1">
+    <div class="row">
+      <div class="twelve columns">
+            <label>name</label><input name='name' type="text" value="Jake Simoneau" />
+            <label>gender</label>
+            <select name='gender'>
+                <option>male</option>
+                <option>female</option>
+                <option>other</option>
+            </select>
+            <br>
+            <label>age</label><input name='age' type="number" min="13" max="100" value="18" />
+            <label>class</label>
+            <select name='class'>
+                <option>Lower</option>
+                <option selected>Middle</option>
+                <option>Upper</option>
+            </select>
+            <br>
+            <button class="button-primary" onclick="controller.choseAvatar();">Go</button>
+      </div>
+    </div>
+</div>
+
+<div id="choice-2" style="display: none;">
+    <div class="row">
+      <div class="twelve columns">
+            <label>theme</label>
+            <select name='theme'>
+                <option>Anime</option>
+                <option selected>Steampunk</option>
+                <option>Sci-fi</option>
+                <option>Comic</option>
+            </select>
+            <br>
+            <button class="button-primary" onclick="controller.choseTheme();">Go</button>
+      </div>
+    </div>
+</div>
+
+<div id="choice-3" style="display: none;">
+    <div class="row">
+      <div class="twelve columns">
+            <label>tickets</label>
+            <select name='tickets'>
+                <option value="weekend"  style="display: none;">Full Weekend</option>
+                <option value="saturday-sunday" style="display: none;" >Saturday &amp; Sunday</option>
+                <option value="saturday" >Saturday</option>
+                <option value="none" selected>No Ticket</option>
+            </select>
+            <label>hotel</label>
+            <select name='hotel'>
+                <option value="con" selected>Con Hotel</option>
+                <option value="none" style="display:none">Commute</option>
+            </select>
+            <label>group</label>
+            <input name="group" type="number" min="0" max="9" value="3" />
+            <label>cosplay</label>
+            <select name='cosplay'>
+                <option value="multiple" style="display: none;">Multiple</option>
+                <option value="yes">Yes</option>
+                <option value="none" selected>No</option>
+            </select>
+            <label>bagged lunches</label>
+            <select name='bagged-lunch'>
+                <option value="all" style="display: none;">All Meals</option>
+                <option value="some">Some Meals</option>
+                <option value="none" selected>No</option>
+            </select>
+            <br>
+            <button class="button-primary" onclick="controller.chosePrep();">Go</button>
+      </div>
+    </div>
+</div>
+      
+  </div>
+
+  </div>
+  
+  <footer">
+      <div class="container">
+        <div class="row">
+          <div class="twelve columns">
+            <hr>
+            &copy; Samuel Sarette 2016
+          </div>
+        </div>
+      </div>
+  </footer>
+
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<script>
+    "use strict";
+    
+    String.prototype.contains = function (searchString, caseInsensitive ) {
+        if (caseInsensitive !== true) return this.indexOf(searchString) >= 0;
+        else  return this.toLowerCase().indexOf(searchString) >= 0;
+    }
+    
+    Array.prototype.contains = function (searchString) {
+        return this.indexOf(searchString) >= 0;
+    }
+    
+    // Attempt to get a better distributed random number than the classic method
+    Math.randomInteger = function(min,max) {
+        var MAX_UINT32 = 0xFFFFFFFF;
+        var range = max - min;
+
+        if (!(range <= MAX_UINT32)) {
+        throw new Error("Range of " + range + " covering " + min + " to " + max + " is > " + MAX_UINT32 + ".");
+        } else if (min === max) {
+            return min;
+        } else if (!(max > min)) {
+            throw new Error("max (" + max + ") must be >= min (" + min + ").");
+        }
+
+        // We need to cut off values greater than this to avoid bias in distribution
+        // over the range.
+        var maxUnbiased = MAX_UINT32 - ((MAX_UINT32 + 1) % (range + 1));
+
+        var rand;
+        do {
+            rand = crypto.getRandomValues(new Uint32Array(1))[0];
+        } while (rand > maxUnbiased);
+
+        var offset = rand % (range + 1);
+        return min + offset;
+    }
+    
+    function onLoad() {}
+        
+    function oneOfArguments() {
+        return arguments[Math.randomInteger(0, arguments.length-1)];
+    }
+    
+    function oneOfArray(possibilities) {
+        return possibilities[Math.randomInteger(0, possibilities.length-1)];
+    }
+    
+    function oneOfOjbectProperties(object) {
+        var possibilityKeys = Object.keys(object);
+        return object[ possibilityKeys[Math.randomInteger(0, possibilityKeys.length-1)] ];
+    }
+        
+    class Avatar {
+        constructor(name, age, incomeLevel, gender = "unknown") {
+            if (arguments.length === 0) { return; }
+            
+            this.name = name;
+            this.age = parseInt(age);
+            this.incomeLevel = isNaN(incomeLevel) ? Avatar.getIncomeLevels()[incomeLevel] : incomeLevel;
+            this.gender = gender;
+            this.money = this.incomeLevel * 100;
+        }
+        static getIncomeLevels()
+        {
+            return {
+                "Lowest" : 0,
+                "Lower" : 1,
+                "Middle" : 2,
+                "Upper-Middle" : 3,
+                "Upper" : 4,
+                "Wealthy" : 5
+            }
+        }
+    }
+    
+    class Hotel {
+        constructor(size = Hotel.randomSize()) {
+            this.name = Hotel.randomName();
+            this.size = size;
+            this._sizeText = Hotel.getSizes()[size];
+        }
+        static randomName() {
+            var name = "";
+            
+            if (this.size >= 3)
+            name += oneOfArguments("Grand ", "");
+                        
+            name += oneOfArguments(
+                "Lauren ",
+                "Place ",
+                "Garden ",
+                "Fireplace ",
+                "Royale ",
+                "Everton "
+            );
+            
+            name += oneOfArguments(
+                "Park ", 
+                "Airport ", 
+                ""
+            );
+            
+            if (this.size == 1)
+            name += oneOfArguments(
+                "Express ", 
+                ""
+            );
+            
+            if (this.size == 2)
+            name += oneOfArguments(
+                "Deluxe ", 
+                ""
+            );
+            
+            name += oneOfArguments(
+                "Inn",
+                "Hotel"
+            );
+
+            if (Hotel.names instanceof Array === false) Hotel.names = [];
+            if (Hotel.names.contains(name)) return Hotel.randomName(); // try again for a unique name
+            
+            Hotel.names.push(name); // add to list of hotels
+            return name;
+        }
+        static randomSize() {
+            return Math.randomInteger(1,Object.keys(Hotel.getSizes()).length);
+        }
+        static getSizes() {
+            return {
+                1: "Small",
+                2: "Medium",
+                3: "Large"
+            }
+        }
+    }
+    
+    class Celebrity {
+        constructor(name, occupation, gender) {
+            this.name = name;
+            this.occupation = occupation;
+            this.gender = gender;
+        }
+        static generateRandom(theme) {
+            var gender = oneOfArguments("male", "female", "other");
+            var name = "";
+            
+            var possiblePrefixes = ["","",""];
+            if (theme == "Steampunk") {
+                possiblePrefixes = possiblePrefixes.concat([
+                    "Captain ",
+                    "Doctor ",
+                    "Professor "
+                ]);
+                if (gender == "male") {
+                    possiblePrefixes.push("Sir ");
+                } else if (gender == "female") {
+                    possiblePrefixes.push("Madame ");
+                }
+            } else {
+                if (gender == "male") {
+                    possiblePrefixes.push("Mr. ");
+                } else if (gender == "female") {
+                    possiblePrefixes = possiblePrefixes.concat(["Ms. ", "Mrs. ", "Mizz "]);
+                }
+            }
+            name += oneOfArray(possiblePrefixes);
+            
+            var possibleNames = [
+                "Ainsley",
+                "Chris",
+                "Drew",
+                "Jamie",
+                "Kelly",
+                "Pat",
+                "Sam",
+                "Taylor"
+            ];
+            var possibleMaleNames = [
+                    "Gregory",
+                    "Derek",
+                    "John",
+                    "Seth",
+                    "Arnold",
+                    "Nathan",
+                    "Dean",
+                    "Calvin",
+                    "Peter",
+                    "Brian",
+                    "Mark",
+                    "Paul",
+                    "Thomas",
+                    "Jack",
+                    "Robert"
+                ];
+            var possibleFemaleNames = [
+                    "Mary",
+                    "Amanda",
+                    "Amy",
+                    "Melissa",
+                    "Kimberly",
+                    "Carol",
+                    "Susan",
+                    "Jennifer",
+                    "Elizabeth",
+                    "Patricia",
+                    "Lucy",
+                    "Shannon",
+                    "Diane"
+                ];
+            if (gender == "male" || gender == "other") {
+                possibleNames = possibleNames.concat(possibleMaleNames);
+            } else if (gender == "female" || gender == "other") {
+                possibleNames = possibleNames.concat(possibleFemaleNames);
+            } 
+            name += oneOfArray(possibleNames) + " ";
+            
+            name += oneOfArguments(
+                "Thompson",
+                "North",
+                "West",
+                "Tucker",
+                "Webb",
+                "Fisher",
+                "Powell",
+                "Bailey",
+                "Murphy",
+                "Campbell",
+                "Lopez",
+                "Walker",
+                "Lee",
+                "Clark",
+                "Harris",
+                "Chevalier",
+                "White",
+                "Jackson",
+                "Thomas",
+                "Anderson",
+                "Taylor",
+                "Moore",
+                "Wilson",
+                "Miller",
+                "Davis",
+                "Brown",
+                "Jones",
+                "Williams",
+                "Johnson",
+                "Smith"
+            );
+              
+            
+            var possibleSuffixes = ["", "", "", " Sr.", " Jr."];
+            if (theme == "Steampunk") {
+                possibleSuffixes.push(" III");
+            }
+            name += oneOfArray(possibleSuffixes);
+            
+            var occupation = "";
+            if (theme == "Anime") {
+                occupation = "Voice Actor";
+            } else if (theme == "Steampunk") {
+                occupation = oneOfArguments(
+                    "Author",
+                    "Steampunk Enthousiast",
+                    "Entertainer",
+                    "Musician",
+                    "Prop Designer",
+                    "Fashion Designer"
+                );
+            } else if (theme == "Sci-fi") {
+                occupation = oneOfArguments(
+                    "Author",
+                    "Actor",
+                    "Actor",
+                    "Writer",
+                    "Director"
+                );
+            } else if (theme == "Comic") {
+                occupation = oneOfArguments(
+                    "Author",
+                    "Actor",
+                    "Comic Artist",
+                    "Director"
+                );
+            }
+            return new Celebrity(name, occupation, gender);
+        }
+    }
+    
+    class Convention {
+        constructor(theme, size = Convention.randomSize()){
+            if (theme in Convention.getThemes() === false) throw "Must pick from one of the themes"
+            this.theme = theme;
+            
+            if (isNaN(size)) {
+                this._sizeText = size;
+                this.size = Object.values(Convention.getSizes())[Object.keys(Convention.getSizes()).indexOf(size)]
+            } else {
+                this.size = size;
+                this._sizeText = Convention.getSizes()[size];
+            }
+            
+            this.hotel = new Hotel(size);
+            this.overflowHotels = [];
+            if (this.size >= 2) {
+                var overflows = Math.round(Math.random() * Math.pow(this.size - 1, 2) ) + (this.size - 2);
+                
+                for (var i = 0; i < overflows; i++) {
+                    this.overflowHotels.push(new Hotel());
+                }
+            }
+            
+            this.distance = oneOfArguments("near", "far");
+            this.guests = Convention.getRandomGuests(this.size, this.theme);
+            this.musicalActs = Convention.getRandomMusicalActs(this.size, this.theme, this.guests);
+            
+            this.days = {
+                number: 0,
+                "Saturday" : true
+            };
+            
+            if (this.size >= 2) {
+                this.days.Friday = oneOfArguments(true, false);
+            } else {
+                this.days.Friday = false;
+            }
+            
+            if (this.size >= 2) {
+                this.days.Sunday = true;
+            } else {
+                this.days.Sunday = oneOfArguments(true, true, false);
+            }
+            
+            for (var i in this.days) {
+                if (i == "number") continue;
+                if (this.days[i] == true) this.days.number += 1;
+            }
+            
+            this.tickets = Convention.generateTicketPrice(this.size, this.days);
+        }
+        static generateTicketPrice(size, days) {
+            
+            var randomAround = function(number, lowerThan, higherThan, roundTo, absMin = 0, absMax = Infinity) {
+                var min = absMin > number-lowerThan ? absMax : number-lowerThan;
+                var max = absMax < number+higherThan ? absMax : number+higherThan;
+                if (min >= max) min = max - 5;
+                if (min < 0) min = 0;
+                return Math.ceil( Math.randomInteger(min, max) / roundTo) * roundTo;
+            }
+        
+            var prices = {
+                Saturday: randomAround(
+                        ((size+1) * 5) + 10, 
+                        (size <= 2) ? 10 : 5, 
+                        size*5,
+                        5
+                    )
+            };
+            
+            if (days.Sunday === true) {
+                prices.Sunday = randomAround(
+                    ((size+1) * 5) + 10, 
+                    10, 
+                    (size*5) - 5,
+                    5, 
+                    5, 
+                    prices.Saturday-5
+                );
+            }
+            
+            if (days.Friday === true) {
+                var absMax = isNaN(prices.Sunday) 
+                    ? prices.Saturday-5 
+                    : prices.Sunday > prices.Saturday 
+                        ? prices.Saturday-5 
+                        : prices.Sunday;
+                prices.Friday = randomAround(((size+1) * 5) + 8, 5, size*5, 5, 5, absMax);
+            }
+            
+            if (days.number > 1) {
+                var all = 0;
+                for (var i in prices) {
+                    all += prices[i];
+                }
+                prices.All = Math.ceil( (all * (1 - 0.20)) / 5) * 5; // 20% off to the nearest 5
+            }
+            
+            return prices;
+        }
+        static getRandomGuests(size, theme) {
+            var guests = [];
+            
+            var numGuests = 0;
+            if (size == 1) {
+                numGuests = Math.randomInteger(0, 1);
+            } else if (size == 2) {
+                numGuests = Math.randomInteger(1, 2);
+            } else if (size > 2 ) {
+                numGuests = Math.randomInteger(1, size*3);
+            }
+            
+            for (var i = 0; i < numGuests; i++) {
+                guests = guests.concat(Celebrity.generateRandom(theme));
+            }            
+            return guests;
+        }
+        static getRandomMusicalActs(size, theme, guests) {
+            var musicians = [];
+            
+            for (var i = 0; i < guests.length; i++) {
+                if (guests[i].occupation == "Musician") {
+                    musicians.push(guests[i]);
+                }
+            }
+            
+            var numMusicians = 0;
+            if (size == 1) {
+                numMusicians = 0
+            } else if (size == 2) {
+                numMusicians = Math.randomInteger(0, 1);
+            } else if (size > 2 ) {
+                numMusicians = Math.randomInteger(1, size);
+            }
+            
+            for (var i = 0; i < numMusicians; i++) {
+                var musician = Celebrity.generateRandom(theme);
+                musician.occupation = "musician";
+                musicians = musicians.concat(musician);
+            }            
+            return musicians;
+        }
+        static randomSize() {
+            return Math.randomInteger(1,Object.keys(Convention.getSizes()).length);
+        }
+        static getSizes()
+        {
+            return {
+                1: "Tiny",
+                2: "Small",
+                3: "Medium",
+                4: "Large"
+            }
+        }
+        static getThemes() {
+            return {
+                "Anime": "Anime",
+                "Steampunk": "Steampunk",
+                "Sci-fi": "Sci-fi",
+                "Comic": "Comic",
+            }
+        }
+    }
+    
+    class MainController {
+        constructor(name) {
+            document.querySelector("input[name=group]").addEventListener("change", function(ev){
+                if (parseInt(ev.srcElement.value) > 1) {
+                    document.querySelector("select[name=bagged-lunch] option[value=all]").style.display = 'none';
+                } else {
+                    document.querySelector("select[name=bagged-lunch] option[value=all]").style.display = '';
+                }
+                if (parseInt(ev.srcElement.value) < 4) {
+                    document.querySelector("select[name=bagged-lunch] option[value=some]").style.display = 'none';
+                } else {
+                    document.querySelector("select[name=bagged-lunch] option[value=some]").style.display = '';
+                }
+            });
+        }
+        
+        choseAvatar() {
+            document.getElementById("choice-1").style.display = "none";
+            this.avatar = new Avatar(
+                document.querySelector("input[name='name']").value,
+                document.querySelector("input[name='age']").value,
+                document.querySelector("select[name='class']").value,
+                document.querySelector("select[name='gender']").value
+            );
+            console.log(this.avatar);
+            document.getElementById("choice-2").style.display = "";
+        }
+        choseTheme() {
+            document.getElementById("choice-2").style.display = "none";
+            this.convention = new Convention(
+                document.querySelector("select[name='theme']").value
+            );
+            console.log(this.convention);
+            
+            if (this.avatar.incomeLevel > 1) {
+                document.querySelector("select[name=cosplay] option[value=multiple]").style.display = '';
+            }
+            if (this.convention.days.number > 1) {
+                document.querySelector("select[name=tickets] option[value=weekend]").style.display = '';
+            }
+            if (this.convention.days.number >= 3) {
+                document.querySelector("select[name=tickets] option[value=saturday-sunday]").style.display = '';
+            }
+            document.querySelector("select[name=hotel] option[value=con]").textContent = this.convention.hotel.name + " (con)";
+            for (var i = 0; i < this.convention.overflowHotels.length; i++) {
+                var element = document.createElement("option");
+                element.value = i;
+                element.textContent = this.convention.overflowHotels[i].name;
+                document.querySelector("select[name=hotel]").appendChild(element);
+            }
+            document.getElementById("choice-3").style.display = "";
+        }
+        chosePrep() {
+            document.getElementById("choice-3").style.display = "none";
+            var tickets = {};
+            switch ( document.querySelector("select[name='tickets']").value ) {
+                case "weekend":
+                    tickets.Saturday = true;
+                    tickets.Sunday = this.convention.days && true;
+                    tickets.Friday = this.convention.days && true;
+                    break;
+                case "saturday-sunday":
+                    tickets.Friday = false;
+                    tickets.Saturday = true;
+                    tickets.Sunday = true;
+                    break;
+                case "saturday":
+                    tickets.Friday = false;
+                    tickets.Saturday = true;
+                    tickets.Sunday = false;
+                    break;
+                case "none":
+                    tickets.Friday = false;
+                    tickets.Saturday = false;
+                    tickets.Sunday = false;
+                    break;
+            }
+            var hotel = this.convention.overflowHotels[document.querySelector("select[name='hotel']").value];
+            hotel.index = document.querySelector("select[name='hotel']").value;
+            
+            this.options = {
+                "tickets": tickets,
+                "hotel" : hotel,
+                "group" : document.querySelector("input[name='group']").value,
+                "cosplay" : document.querySelector("select[name='cosplay']").value,
+                "baggedLunch": document.querySelector("select[name='bagged-lunch']").value
+            };
+            console.log(this.options);
+            //document.getElementById("choice-4").style.display = "";
+        }
+    }
+    var controller = new MainController("Main-thing ");
+    
+    
+</script>
+</body>
+</html>

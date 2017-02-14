@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Greenboy Canvas Test</title>
+    <meta name="description" content="Test of gameboy-style graphics on an HTML5 canvas">
+    <meta name="theme-color" content="#4D533C">
+    <meta name="author" content="Sam Sarette">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
+    <link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
+    <style>
+        body {
+            background-color: #1F1F1F;
+            color: #C4CFA1;
+            font-family: "Press Start 2P";
+        }
+        canvas {
+            min-width: 160px;
+            min-height: 144px;
+            max-width: 320px;
+            max-height: 288px;
+            width: 100%;
+            height: 100%;
+            background-color: #ddd;
+            border: 1px solid white;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="one-half column" style="margin-top: 5%; margin-bottom: 5%"> Greenboy Canvas Test </div>
+        </div>
+        <div class="row">
+            <div class="one-half column"> <canvas id="tile-test"></canvas> </div>
+            <div class="one-half column"> <canvas id="pixel-test"></canvas> </div>
+        </div>
+    </div>
+    <script>
+        var colors = [ "#1F1F1F", "#4D533C", "#8B956D", "#C4CFA1" ];
+        var currentColorIndex = 0;
+
+        function nextColor() {
+            currentColorIndex = (currentColorIndex + 1) % colors.length;
+            return currentColor = colors[currentColorIndex];
+        }
+
+        function randomColor() {
+            currentColorIndex =  Math.floor(Math.random() * colors.length);
+            return currentColor = colors[currentColorIndex];
+        }
+
+        var currentColor = nextColor();
+
+        /* Tiles */
+        var tileTestCanvas = document.getElementById("tile-test");
+        tileTestCanvas.width = 160;
+        tileTestCanvas.height = 144;
+        var tileTestContext = tileTestCanvas.getContext("2d");
+
+        for (var i = 0; i < 10; i++) {
+            for (var j = 0; j < 9; j++) {
+                tileTestContext.fillStyle = randomColor();
+                tileTestContext.fillRect(i*16,j*16,16,16);
+            }
+        }
+
+        /* Pixels */
+        var pixelTestCanvas = document.getElementById("pixel-test");
+        pixelTestCanvas.width = 160;
+        pixelTestCanvas.height = 144;
+        var pixelTestContext = pixelTestCanvas.getContext("2d");
+
+        for (var i = 0; i < 160; i++) {
+            for (var j = 0; j < 144; j++) {
+                pixelTestContext.fillStyle = randomColor();
+                pixelTestContext.fillRect(i,j,1,1);
+            }
+        }
+    </script>
+</body>
+</html>

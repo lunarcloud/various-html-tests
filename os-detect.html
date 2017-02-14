@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Basic Page Needs
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    <title>Software Project</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="theme-color" content="white" />
+
+    <!-- Mobile Specific Metas
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONT
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link href="http://cdn.rawgit.com/Lukas-W/font-linux/v0.5/assets/font-linux.css" rel="stylesheet">
+
+    <!-- CSS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+
+    <!-- Favicon
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="icon" type="image/png" href="https://placehold.it/32x32">
+
+    <style>
+    
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+        }
+
+        .pointer {
+            cursor: pointer;
+        }
+                
+        #downloads-available p,
+        #downloads-available hr
+        {
+            margin-top: 2px !important;
+            margin-bottom: 2px !important;
+        }
+        
+        #downloads-available .button.windows:hover {
+            background-color: rgba(13,216,0,0.15);
+        }
+        #downloads-available .button.osx:hover {
+            background-color: rgba(90,168,191,0.15);
+        }
+        #downloads-available .button.ubuntu-linux:hover {
+            background-color: rgba(212,119,53,0.15);
+        }
+        #downloads-available .button.other-linux:hover {
+            background-color: rgba(171,90,191,0.15);
+        }
+        
+        #downloads-available .button {
+            margin: 0px;
+            padding: 0 14px;
+            font-size: 32px;
+        }
+        
+        #downloads-available .button.empty {
+            color: transparent;
+            border-color: transparent;
+            cursor: default;
+        }
+
+        @media (max-width: 640px) {
+            #application-image {
+                width: 100%;
+                float: none !important;
+            }
+        }
+        
+    </style>
+</head>
+<body onload="onLoad()" class="hidden-menu-mobile">
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+  <div class="container">
+  
+        
+    <div class="row" style="margin-top: 4px;">
+      <div class="six columns">
+        <h2>Software Project</h2>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="twelve columns">
+        <img id="application-image" src="http://placehold.it/256x256" style="float: right; max-width: 100%; margin-left: 12px; margin-bottom: 20px;" >
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
+        </p>
+      </div>
+    </div>
+    
+    
+    <div class="row">
+    
+      <div class="six columns">
+          <div id="supported">
+            <h5>Download</h5>
+            <p id="minimum-requirements">&nbsp;</p>
+            <a id="download" class="button button-primary" href="" download >
+                <i class="fa fa-download"></i>
+                <span id="main-platform">&nbsp;</span>
+            </a>
+          </div>
+          <div id="unsupported" style="display: none;">
+            <h5>Unsupported System</h5>
+            <p id="unsupported-message"></p>
+            <p>Please select from the list of supported systems.</p>
+          </div>
+
+      </div>
+      
+      <div class="six columns">
+        <h5>Supported Systems</h5>
+        
+        <div id="downloads-available" class="no-select">
+            <div style="padding-bottom: 4px;">
+                <span style="float: left; margin-right: 40px;">64 bit</span>
+                <a class="button windows" onclick='switchDownload("Windows", "amd64");' title="Windows (64-bit)">
+                    <i class="fa fa-windows"></i>
+                </a>
+                <a class="button osx" onclick='switchDownload("Mac OS X", "amd64");' title="Mac OS X">
+                    <i class="fa fa-apple"></i>
+                </a>
+                <a class="button ubuntu-linux" onclick='switchDownload("Ubuntu", "amd64");' title="Ubuntu (64-bit)">
+                    <i class="fl-ubuntu-inverse"></i>
+                </a> 
+                <a class="button other-linux" onclick='switchDownload("Linux", "amd64");' title="Linux (64-bit)">
+                    <i class="fa fa-linux"></i>
+                </a> 
+            </div>
+            <div style="display: inline-block; padding-top: 4px; border-top: 1px solid #ccc;">
+                <span style="float: left; margin-right: 40px;">32 bit</span>
+                <a class="button windows" onclick='switchDownload("Windows", "x86");' title="Windows (64-bit)">
+                    <i class="fa fa-windows"></i>
+                </a>
+                <a class="button empty"><i class="fa fa-apple"></i></span></a>
+                <!--<a class="button osx" onclick='switchDownload("Mac OS X", "x86");' title="Mac OS X (32-bit)">
+                    <i class="fa fa-apple"></i>
+                </a>-->
+                <a class="button ubuntu-linux" onclick='switchDownload("Ubuntu", "x86");' title="Ubuntu (32-bit)">
+                    <i class="fl-ubuntu-inverse"></i>
+                </a>
+                <a class="button other-linux" onclick='switchDownload("Linux", "x86");' title="Linux (32-bit)">
+                    <i class="fa fa-linux"></i>
+                </a>
+            </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+    </div>
+
+  </div>
+  
+  <footer">
+      <div class="container">
+        <div class="row">
+          <div class="twelve columns">
+            <hr>
+            &copy; Samuel Sarette 2016
+          </div>
+        </div>
+      </div>
+  </footer>
+
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<script>
+    
+    function onLoad() {
+        detectOS();
+    }
+    
+    String.prototype.contains = function (searchString, caseInsensitive ) {
+        if (caseInsensitive !== true) return this.indexOf(searchString) >= 0;
+        else  return this.toLowerCase().indexOf(searchString) >= 0;
+    }
+    
+    function detectOS()
+    {        
+        var os = {
+            name: "",
+            platform: "",
+            version: "",
+            arch: ""
+        };
+        
+        var clientStrings = [
+            {s:'Windows 10', r:/(Windows 10.0|Windows NT 10.0)/},
+            {s:'Windows 8.1', r:/(Windows 8.1|Windows NT 6.3)/},
+            {s:'Windows 8', r:/(Windows 8|Windows NT 6.2)/},
+            {s:'Windows 7', r:/(Windows 7|Windows NT 6.1)/},
+            {s:'Windows Vista', r:/Windows NT 6.0/},
+            {s:'Windows Server 2003', r:/Windows NT 5.2/},
+            {s:'Windows XP', r:/(Windows NT 5.1|Windows XP)/},
+            {s:'Windows 2000', r:/(Windows NT 5.0|Windows 2000)/},
+            {s:'Windows ME', r:/(Win 9x 4.90|Windows ME)/},
+            {s:'Windows 98', r:/(Windows 98|Win98)/},
+            {s:'Windows 95', r:/(Windows 95|Win95|Windows_95)/},
+            {s:'Windows NT 4.0', r:/(Windows NT 4.0|WinNT4.0|WinNT|Windows NT)/},
+            {s:'Windows CE', r:/Windows CE/},
+            {s:'Windows 3.11', r:/Win16/},
+            {s:'Android', r:/Android/},
+            {s:'Open BSD', r:/OpenBSD/},
+            {s:'Sun OS', r:/SunOS/},
+            {s:'SUSE', r:/(SUSE)/},
+            {s:'Gentoo', r:/(Gentoo)/},
+            {s:'Red Hat', r:/(Red Hat)/},
+            {s:'Linux Mint', r:/(Linux Mint)/},
+            {s:'Fedora', r:/(Fedora)/},
+            {s:'CentOS', r:/(CentOS)/},
+            {s:'Ubuntu', r:/(buntu)/},
+            {s:'Linux', r:/(Linux|X11)/},
+            {s:'iOS', r:/(iPhone|iPad|iPod)/},
+            {s:'Mac OS X', r:/Mac OS X/},
+            {s:'Mac OS', r:/(MacPPC|MacIntel|Mac_PowerPC|Macintosh)/},
+            {s:'QNX', r:/QNX/},
+            {s:'UNIX', r:/UNIX/},
+            {s:'BeOS', r:/BeOS/},
+            {s:'OS/2', r:/OS\/2/},
+            {s:'Search Bot', r:/(nuhk|Googlebot|Yammybot|Openbot|Slurp|MSNBot|Ask Jeeves\/Teoma|ia_archiver)/}
+        ];
+        for (var id in clientStrings)
+        {
+            if (clientStrings[id].r.test(navigator.userAgent))
+            {
+                os.name = clientStrings[id].s;
+
+                if (os.name.contains("Windows"))
+                {
+                    os.platform = "Windows";
+                }
+                else if (os.name !== "Android" && /(Linux|X11)/.test(navigator.userAgent))
+                {
+                    os.platform = "Linux";
+                }
+                else if (os.name == "Mac OS X")
+                {
+                    os.platform = "Mac OS X";
+                    os.name = navigator.userAgent.match(/Mac\s+OS\s+X[^\)]*\)/g)[0].replace(")", "").replace(/_/g, ".");
+                }
+
+                if (navigator.platform.contains("64") || navigator.userAgent.contains("WOW64"))
+                {
+                    os.arch = "amd64";
+                }
+                else if (navigator.platform.contains("32") || navigator.platform.contains("86") )
+                {
+                    os.arch = "x86";
+                }
+                else if (navigator.userAgent.contains("arm", true) )
+                {
+                    os.arch = navigator.userAgent.match(/arm.*;/ig)[0].replace(";","");
+                }
+
+                break;
+            }
+        }
+    
+        switchDownload(
+            os.name.contains("Ubuntu") ? "Ubuntu" : os.platform
+            , os.arch
+        );
+    }
+    
+    var downloads = {
+        "amd64" : {
+            "Windows" : "Install Project (64bit).exe",
+            "Mac OS X" : "Project.app.zip",
+            "Ubuntu" : "project-1.0_amd64.deb",
+            "Linux" : "project-linux-amd64.tar.gz"
+        },
+        "x86" : {
+            "Windows" : "Install Project (32bit).exe",
+            //"Mac OS X" : "Project.app (32 bit).zip",
+            "Ubuntu" : "project--1.0_i386.deb",
+            "Linux" : "project-linux-i386.tar.gz"
+        }
+    };
+    
+    var minimumRequirements = {
+        "amd64" : {
+            "Windows" : "Windows XP SP3 or newer",
+            "Mac OS X" : "OS X 10.7 or newer",
+            "Ubuntu" : "Ubuntu 14.04 or newer",
+            "Linux" : "a system that can run Chromium"
+        },
+        "x86" : {
+            "Windows" : "Windows XP SP3 or newer",
+            //"Mac OS X" : "OS X 10.7 or newer",
+            "Ubuntu" : "Ubuntu 14.04 or newer",
+            "Linux" : "a system that can run Chromium"
+        }
+    };
+    
+    function switchDownload(os, arch)
+    {
+        var osNotFoundAtAll = true;
+        for (var i in downloads) { if (os in downloads[i]) { osNotFoundAtAll = false; } }
+        
+        if (osNotFoundAtAll || arch in downloads == false ||  os in downloads[arch] == false)
+        {
+            document.getElementById("supported").style.display = "none";
+            document.getElementById("unsupported").style.display = "";
+            
+            if (osNotFoundAtAll) document.getElementById("unsupported-message").textContent = "Software is not available for " + os + ".";
+            else if (arch in downloads == false) document.getElementById("unsupported-message").textContent = "Software is not available for " + arch + ".";
+            else if (os in downloads[arch] == false) document.getElementById("unsupported-message").textContent = "Software is not available for " + os + " on " + arch + ".";
+            
+            return;
+        }
+
+        console.debug("Switching to " + os + " " + arch);
+        document.getElementById("unsupported").style.display = "none";
+        document.getElementById("supported").style.display = "";
+        
+        document.getElementById("download").setAttribute("href", downloads[arch][os]);
+        
+        document.getElementById("minimum-requirements").textContent = "Requires " + minimumRequirements[arch][os];
+        
+        document.getElementById("main-platform").textContent = os == "Mac OS X" ? os 
+        :   (arch == "amd64" ? os + " (64-bit)"
+                : arch == "x86" ? os + " (32-bit)" 
+                : os + " (" + arch + ")"
+            );
+    }
+    
+</script>
+</body>
+</html>
