@@ -186,6 +186,7 @@
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <script>
+	"use strict";
     
     function onLoad() {
         detectOS();
@@ -316,7 +317,7 @@
 				console.debug("os: " + JSON.stringify(os, undefined, 4));
 			
 				switchDownload(
-					os.name.contains("Ubuntu") ? "Ubuntu" : os.platform
+					os.distro === "Ubuntu" ? "Ubuntu" : os.platform
 					, os.arch
 				);
                 return;
