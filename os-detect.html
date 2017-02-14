@@ -218,7 +218,7 @@
             {s:'Windows ME', r:/(Win 9x 4.90|Windows ME)/},
             {s:'Windows 98', r:/(Windows 98|Win98)/},
             {s:'Windows 95', r:/(Windows 95|Win95|Windows_95)/},
-            {s:'Windows NT 4.0', r:/(Windows NT 4.0|WinNT4.0|WinNT|Windows NT)/},
+            {s:'Windows NT 4.0', r:/(Windows NT 4.0|WinNT4.0)/},
             {s:'Windows CE', r:/Windows CE/},
             {s:'Windows 3.11', r:/Win16/},
             {s:'Android', r:/Android/},
@@ -313,17 +313,16 @@
                     os.arch = "x86";
                 }
 
-						
-				console.debug("os: " + JSON.stringify(os, undefined, 4));
-			
-				switchDownload(
-					os.distro === "Ubuntu" ? "Ubuntu" : os.platform
-					, os.arch
-				);
-                return;
+                break;
             }
         }
-    
+				
+		console.debug("os: " + JSON.stringify(os, undefined, 4));
+	
+		switchDownload(
+			os.distro === "Ubuntu" ? "Ubuntu" : os.platform
+			, os.arch
+		);
     }
     
     var downloads = {
@@ -366,7 +365,8 @@
             document.getElementById("supported").style.display = "none";
             document.getElementById("unsupported").style.display = "";
             
-            if (osNotFoundAtAll) document.getElementById("unsupported-message").textContent = "Software is not available for " + os + ".";
+			if (typeof(os) !== "string" || os.length == 0) document.getElementById("unsupported-message").textContent = "Cannot detect your operating system.";
+            else if (osNotFoundAtAll) document.getElementById("unsupported-message").textContent = "Software is not available for " + os + ".";
             else if (arch in downloads == false) document.getElementById("unsupported-message").textContent = "Software is not available for " + arch + ".";
             else if (os in downloads[arch] == false) document.getElementById("unsupported-message").textContent = "Software is not available for " + os + " on " + arch + ".";
             
