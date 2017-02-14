@@ -223,6 +223,9 @@
             {s:'Android', r:/Android/},
             {s:'Open BSD', r:/OpenBSD/},
             {s:'Sun OS', r:/SunOS/},
+            {s:'Debian', r:/(Debian)/},
+            {s:'Slackware', r:/(Slackware)/},
+            {s:'elementary OS', r:/(elementary OS)/},
             {s:'SUSE', r:/(SUSE)/},
             {s:'Gentoo', r:/(Gentoo)/},
             {s:'Red Hat', r:/(Red Hat)/},
@@ -245,6 +248,20 @@
             if (clientStrings[id].r.test(navigator.userAgent))
             {
                 os.name = clientStrings[id].s;
+				
+				if (os.name !== "Android" && /(Linux|X11)/.test(navigator.userAgent))
+                {
+                    os.platform = "Linux";
+					if (os.name !== "Linux") 
+					{
+						os.distro = os.name;
+					}
+					else 
+					{
+						os.distro = "";
+					}
+					
+                }
 
                 if (os.name.contains("Windows"))
                 {
@@ -257,10 +274,22 @@
 					os.version = navigator.userAgent.match(/Android\s*(\d*\.\d*\.\d*)/g)[0].replace("Android ", "");
 					os.name = navigator.userAgent.match(/Android\s*(\d*\.\d*)/g)[0];
                 }
-                else if (os.name !== "Android" && /(Linux|X11)/.test(navigator.userAgent))
-                {
-                    os.platform = "Linux";
-                }
+				else if (os.platform === "Linux" && os.distro !== "") 
+				{
+					if (navigator.userAgent.match(new RegExp(os.distro+"\/\\S*","g")) !== null) 
+					{
+						if (navigator.userAgent.match(new RegExp(os.distro+"\/\\d*\.\\d*\s*\(.*\)","g")) !== null) 
+						{
+							os.name = navigator.userAgent.match(new RegExp(os.distro+"\/\\d*\.\\d*\s*\(.*\)","g"))[0].replace("/", " ")
+						}
+						else 
+						{
+							os.name = navigator.userAgent.match(new RegExp(os.distro+"\/\\d*\.\\d*","g"))[0].replace("/", " ");
+						}
+						
+						os.version = navigator.userAgent.match(new RegExp(os.distro+"\/\\S*","g"))[0].replace(os.distro+"/", "");
+					}
+				}
                 else if (os.name === "Mac OS X")
                 {
                     os.platform = "Mac OS X";
@@ -283,16 +312,17 @@
                     os.arch = "x86";
                 }
 
-                break;
+						
+				console.debug("os: " + JSON.stringify(os, undefined, 4));
+			
+				switchDownload(
+					os.name.contains("Ubuntu") ? "Ubuntu" : os.platform
+					, os.arch
+				);
+                return;
             }
         }
     
-		console.debug("os: " + JSON.stringify(os, undefined, 4));
-	
-        switchDownload(
-            os.name.contains("Ubuntu") ? "Ubuntu" : os.platform
-            , os.arch
-        );
     }
     
     var downloads = {
