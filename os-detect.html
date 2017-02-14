@@ -250,27 +250,35 @@
                 {
                     os.platform = "Windows";
                 }
+                else if (os.name === "Android")
+                {
+                    os.platform = "Android";
+					os.version = navigator.userAgent.match(/Android\s*(\d*\.\d*\.\d*)/g)[0].replace("Android ", "");
+					os.name = navigator.userAgent.match(/Android\s*(\d*\.\d*)/g)[0];
+                }
                 else if (os.name !== "Android" && /(Linux|X11)/.test(navigator.userAgent))
                 {
                     os.platform = "Linux";
                 }
-                else if (os.name == "Mac OS X")
+                else if (os.name === "Mac OS X")
                 {
                     os.platform = "Mac OS X";
                     os.name = navigator.userAgent.match(/Mac\s+OS\s+X[^\)]*\)/g)[0].replace(")", "").replace(/_/g, ".");
                 }
 
-                if (navigator.platform.contains("64") || navigator.userAgent.contains("WOW64"))
+				if (navigator.platform.contains("arm") || navigator.userAgent.contains("arm", true) )
+                {
+					os.arch = "arm";
+                }
+                else if ( navigator.userAgent.contains("x64") || navigator.userAgent.contains("amd64") 
+				|| navigator.userAgent.contains("x86_64") || navigator.platform.contains("x64") || navigator.userAgent.contains("WOW64") )
                 {
                     os.arch = "amd64";
                 }
-                else if (navigator.platform.contains("32") || navigator.platform.contains("86") )
+                else if ( navigator.platform.contains("i686") || navigator.platform.contains("i386") 
+				|| navigator.platform.contains("32") || navigator.platform.contains("86") )
                 {
                     os.arch = "x86";
-                }
-                else if (navigator.userAgent.contains("arm", true) )
-                {
-                    os.arch = navigator.userAgent.match(/arm.*;/ig)[0].replace(";","");
                 }
 
                 break;
