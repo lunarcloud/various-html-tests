@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Basic Page Needs
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    <title>Text Adventure Test</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="theme-color" content="white" />
+
+    <!-- Mobile Specific Metas
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONT
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link href="http://cdn.rawgit.com/Lukas-W/font-linux/v0.5/assets/font-linux.css" rel="stylesheet">
+
+    <!-- CSS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+
+    <!-- Favicon
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="icon" type="image/png" href="https://placehold.it/32x32">
+	
+    <link rel="stylesheet" type="text/css" href="text-adventure.css">
+</head>
+<body onload="TextAdventure.start();">
+
+    <div class="row" style="margin-top: 4px;">
+      <div class="six columns">
+        <h2>Text Adventure</h2>
+      </div>
+    </div>
+	
+    <div class="row">
+      <div class="twelve columns">
+		<div id="dialog"> </div>
+	  </div>
+	</div>
+	
+  <footer">
+      <div class="container">
+        <div class="row">
+          <div class="twelve columns">
+            <hr>
+            &copy; Samuel Sarette 2017
+          </div>
+        </div>
+      </div>
+  </footer>
+</body>
+<script src="text-adventure.js"></script>
+<script>
+	"use strict"; // turns off weird stuff and catches errors better
+	function start() {
+		TextAdventure.createVariables("name");
+
+		if (TextAdventure.variableNotEmpty("name")) {
+			welcomeBack();
+		} else {
+			TextAdventure.narration("<b>This</b> is the reading pane!");
+			TextAdventure.dialog("Igor", "<i>Welcome</i> to the Velvet room.", TextAdventure.Position.left);
+			TextAdventure.dialog("You", "Is this persona?", TextAdventure.Position.right);
+			TextAdventure.choices(
+				["Please, please, please!", "wantPersona()"], ["Not that I've ever played...", "neverPlayed()"]
+			);
+		}
+	}
+
+	function wantPersona() {
+		TextAdventure.narration("Sorry, it's more like an old command line adventure game.");
+		TextAdventure.dialog("You", "So?", TextAdventure.Position.right);
+		TextAdventure.dialog("Igor", "Promise to take responsibility for all your actions?", TextAdventure.Position.left);
+		TextAdventure.dialog("You", "Uh...", TextAdventure.Position.right);
+		TextAdventure.choices(
+			["Sure", "responsibility()"], ["Nope", "irresponsibility()"]
+		);
+	}
+
+	function neverPlayed() {
+		TextAdventure.narration("Go... Play... It... Now!");
+		TextAdventure.dialog("You", "Okay...", TextAdventure.Position.right);
+	}
+
+	function responsibility() {
+		TextAdventure.dialog("Igor", "Very well. What is your name?", TextAdventure.Position.left);
+		TextAdventure.input("name", "sayHello()");
+	}
+
+	function irresponsibility() {
+		TextAdventure.dialog("Igor", "Get out of my house, bum!", TextAdventure.Position.left);
+	}
+
+	function sayHello() {
+		TextAdventure.dialog("Igor", "Good luck in your journey, " + TextAdventure.getVariable("name"), TextAdventure.Position.left);
+	}
+
+	function welcomeBack() {
+		TextAdventure.dialog("Igor", "Welcome back, " + TextAdventure.getVariable("name"), TextAdventure.Position.left);
+		TextAdventure.choices(
+			["Restart", "restart()"]
+		);
+	}
+
+	function restart() {
+		TextAdventure.clearVariables();
+		location.reload();
+	}
+</script>
+</html>

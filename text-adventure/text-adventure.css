@@ -1,0 +1,32 @@
+body {
+    background: white;
+    padding: 20px;
+}
+#dialog div {
+    padding: 10px;
+    border-radius: 4px;
+}
+#dialog .name {
+    font-weight: bold;
+}
+#dialog .narration,
+#dialog .input,
+#dialog .choices {
+    text-align: center;
+}
+#dialog .left-align {
+    text-align: left;
+    background: rgb(255, 220, 200);
+}
+#dialog .right-align {
+    text-align: right;
+    background: rgb(225, 225, 255);
+}
+#dialog .left-align .name {
+    float: left;
+    margin-right: 20px;
+}
+#dialog .right-align .name {
+    float: right;
+    margin-left: 20px;
+}
