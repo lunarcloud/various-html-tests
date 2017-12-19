@@ -7,6 +7,7 @@
     <meta name="theme-color" content="#1F1F1F">
     <meta name="author" content="Sam Sarette">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <style>
         body {
 			z-index: -1;
@@ -14,11 +15,15 @@
             color: black;
 			margin: 0;
 			padding: 0;
-        }		
+			min-width: 320px;
+			min-height: 448px;
+        }
 		sidebar {
+			z-index: 0;
 			position: fixed; 
 			left: 0;
-			width: 52px;
+			width: 36px;
+			transition: width 0.2s ease-out, z-index 0.2s ease-out;
 			top: 0;
 			bottom: 0;
 			padding: 0;
@@ -26,51 +31,136 @@
 			background-color: #333;
 			color: #ddd;
 		}
+		
+		.overriding-warning {
+			display: none;
+			position: fixed;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			text-align: center;
+			margin-top: 10%;
+			height: 100%;
+		}
+
+		#height-only-warning {
+			z-index: 1;
+		}
+		#width-only-warning {
+			z-index: 2;
+		}
+		#both-dimensions-warning {
+			z-index: 3;
+		}
+			
+		@media screen and (max-height: 448px) {
+			body * {
+				display: none;
+			}
+			#height-only-warning {
+				display: block;
+			}
+		}
+		@media screen and (max-width: 320px) {
+			body * {
+				display: none;
+			}
+			#width-only-warning {
+				display: block;
+			}
+		}
+		@media screen and (max-height: 448px) and (max-width: 320px) {
+			body * {
+				display: none;
+			}
+			#height-only-warning,
+			#width-only-warning {
+				display: none!important;
+			}
+			#both-dimensions-warning {
+				display: block;
+			}
+		}
+		
 		sidebar:hover,
 		sidebar:active,
 		sidebar:focus {
-			z-index: 100;
-			width: 104px;
-			cursor: pointer;
+			z-index: 10;
+			width: 200px;
+		}
+				
+		sidebar .expanded {
+			opacity: 0;
+			transition: opacity 0.2s ease-out 0.1s;
 		}
 		
-		
-		sidebar:hover .small-sidebar,
-		sidebar:active .small-sidebar,
-		sidebar:focus .small-sidebar {
-			display: none!important;
+		sidebar:hover .expanded,
+		sidebar:active .expanded,
+		sidebar:focus .expanded {
+			opacity: 1;
 		}
 		
-		sidebar .large-sidebar {
-			display: none;
+		sidebar #main-logo {
+			width: 24px;
+			margin-bottom: 24px;
+			transition: width 0.2s, margin-bottom 0.2s;
 		}
-		sidebar:hover .large-sidebar,
-		sidebar:active .large-sidebar,
-		sidebar:focus .large-sidebar {
-			display: inherit;
+		sidebar:hover #main-logo,
+		sidebar:active #main-logo,
+		sidebar:focus #main-logo {
+			width: 48px;
+			margin-bottom: 0;
 		}
 		
 		sidebar ul {
 			padding: 0;
 			margin: 0;
 			padding-top: 2px;
+			width: 100%;
+			overflow: hidden;
 		}
 		
 		sidebar li {
-			padding-top: 4px;
-			padding-bottom: 4px;
-			padding-left: 2px;
+			padding: 4px;
 			list-style: none;
+			font-size: 12pt;
+			width: 200px;
+		}
+		
+		sidebar li .fa {
+			width: 26px;
+			text-align: center;
+			font-size: 18pt;
 		}
 		
 		sidebar li:hover {
 			background-color: #FFF3;
 		}
 		
-		main {
-			z-index: 0;
+		sidebar:hover li a {
+			cursor: pointer;
+		}
+		
+		sidebar footer {
+			z-index: 1;
+			background-color: #000;
 			position: fixed;
-			left: 52px;
+			bottom: 0;
+			width: 36px;
+			transition: width 0.2s ease-out, z-index 0.2s ease-out;
+		}
+		sidebar:hover footer,
+		sidebar:active footer,
+		sidebar:focus footer{
+			z-index: 10;
+			width: 200px;
+		}
+		
+		main {
+			z-index: 1;
+			position: absolute;
+			left: 36px;
 			right: 0;
 			top: 0;
 			bottom: none;
@@ -96,33 +186,129 @@
 			grid-column: 2;
 			grid-row: 2;
 		}
+		
+		.a, .b, .c, .d {
+			padding: 4px;
+		}
+		.a p, .b p, .c p, .d p {
+			text-indent: 24px;
+		}
+		
     </style>
 </head>
 <body>
+	<div id="height-only-warning" class="overriding-warning">
+		Please expand the height of the browser or view on a bigger screen.
+	</div>
+	<div id="width-only-warning" class="overriding-warning">
+		Please expand the width of the browser or view on a bigger screen.
+	</div>
+	<div id="both-dimensions-warning" class="overriding-warning">
+		Please expand the height and width of the browser or view on a bigger screen.
+	</div>
 	<sidebar>
 		<ul>
-			<li class="small-sidebar" ><a>
-				<img src="http://www.placehold.it/48x48" />
-			</a></li>
-			<li class="large-sidebar" ><a>
-				<img src="http://www.placehold.it/48x48" style="margin-left: 26px;" />
+			<li><a>
+				<img id="main-logo" src="http://www.placehold.it/48x48" />
 			</a></li>
 			<li><a>
-				2
+				<i class="fa fa-bookmark" aria-hidden="true"></i>
+				<span class="expanded"> Library</span>
 			</a></li>
 			<li><a>
-				3
+				<i class="fa fa-user" aria-hidden="true"></i>
+				<span class="expanded"> Directory</span>
 			</a></li>
 			<li><a>
-				4
+				<i class="fa fa-book" aria-hidden="true"></i>
+				<span class="expanded"> Encyclopedia</span>
+			</a></li>
+			<li><a>
+				<i class="fa fa-globe" aria-hidden="true"></i>
+				<span class="expanded"> Atlas</span>
+			</a></li>
+			<li><a>
+				<i class="fa fa-film" aria-hidden="true"></i>
+				<span class="expanded"> Theater</span>
+			</a></li>
+			<li><a>
+				<i class="fa fa-gamepad" aria-hidden="true"></i>
+				<span class="expanded"> Games</span>
+			</a></li>
+			<li><a>
+				<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+				<span class="expanded"> Shop</span>
 			</a></li>
 		</ul>
+		<footer>
+			<ul>	
+				<li><a>
+					<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+					<span class="expanded"> Info</span>
+				</a></li>
+				<li><a>
+					<i class="fa fa-envelope" aria-hidden="true"></i>
+					<span class="expanded"> Contact Us</span>
+				</a></li>
+				<li><a>
+					<i class="fa fa-info-circle" aria-hidden="true"></i>
+					<span class="expanded"> About</span>
+				</a></li>
+			</ul>
+			<div style="height: 30px; margin-left: 10px; overflow: hidden;">
+				&copy; <span class="expanded"> Samuel Sarette 2017</span>
+			</div>
+		</footer>
 	</sidebar>
 	<main>
-		<section class="a">A</section>
-		<article class="b">B</article>
-		<aside class="c">C</aside>
-		<div class="d">D</div>
+		<section class="a">
+		<h1>A</h1>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum. Aliquam vitae dui ligula. Duis sit amet sagittis ex. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Morbi volutpat urna lectus, blandit consequat enim finibus at. Donec non condimentum metus. Sed sodales, velit vel cursus facilisis, augue ligula aliquet risus, sed aliquam augue arcu eu justo.</p>
+		</section>
+		<article class="b">
+		<h2>B</h2>
+		<p>Morbi nec nulla at sem euismod condimentum sit amet a lectus. Donec sed lorem a est egestas accumsan. Suspendisse vitae tempor massa. Suspendisse finibus urna eu suscipit consequat. Nam dapibus massa ac placerat egestas. Vestibulum ornare ex quis dapibus lobortis. Morbi magna justo, efficitur eu hendrerit vel, eleifend at dolor. Praesent euismod facilisis tellus quis lobortis. Aenean eleifend id metus quis aliquam. Aliquam erat volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec interdum leo ligula, at mattis dui efficitur id. Fusce erat odio, venenatis sit amet elit at, euismod dictum lectus. Nam non suscipit neque, congue imperdiet nunc. Fusce lobortis urna facilisis, vestibulum quam quis, molestie arcu. Nam eget volutpat magna, auctor porta nisi.</p>
+
+		<p>Ut commodo porta lorem, quis vulputate ligula egestas nec. Vestibulum non convallis tortor. Sed eros erat, molestie in ultrices sit amet, rutrum a nisi. Pellentesque nec erat fermentum, aliquam diam ac, semper eros. Nunc posuere odio quam, a pellentesque lectus tempus suscipit. Praesent dapibus massa eget ex fermentum, a ultricies mauris maximus. Phasellus ac lobortis nunc. Nullam imperdiet placerat purus, ut pulvinar libero feugiat ut. Etiam fermentum laoreet tortor vel aliquam. </p>
+		</article>
+		<aside class="c">
+		<h2>C</h2>
+		<p>In hac habitasse platea dictumst. Aliquam sit amet euismod lectus, ac molestie tellus. Pellentesque eu facilisis leo. Nam sed ex massa. Quisque imperdiet neque a luctus vehicula. Maecenas ut tempor mauris. Donec diam mi, varius sed orci id, laoreet varius ante.</p>
+
+		<p>Etiam sit amet leo mollis, vehicula justo sit amet, volutpat augue. Praesent at eros porta, bibendum purus laoreet, lobortis erat. Sed dignissim arcu ut libero fringilla vulputate. Morbi et libero tristique, lobortis nunc non, commodo tellus. Suspendisse ornare sapien in urna ullamcorper, ut finibus eros imperdiet. Nunc porttitor porttitor mi, non tristique neque porta a. Etiam eget molestie augue. In nunc risus, faucibus sagittis turpis eget, vestibulum scelerisque dolor. Duis est nisi, pharetra ullamcorper auctor eget, aliquet nec urna. Morbi fermentum ipsum a neque ultricies hendrerit. Integer ac auctor mi. Vivamus vehicula placerat turpis. Maecenas hendrerit leo sit amet quam congue interdum. Pellentesque purus eros, ornare nec nibh non, facilisis sodales leo. Suspendisse nec velit dolor. Etiam facilisis dapibus diam eu feugiat.</p>
+
+		<p>Etiam pharetra turpis non tortor pretium facilisis. Sed urna tellus, porta vel massa eget, ullamcorper sodales eros. Donec mattis blandit tellus sed fringilla. Ut condimentum orci eget odio pulvinar, non condimentum tortor vulputate. Proin blandit eleifend est, vitae consectetur nisl. Sed a sem sit amet ligula sollicitudin malesuada. Aenean pulvinar a felis ut rhoncus. Duis tristique in dolor vitae semper. Nunc egestas lorem ut tincidunt fringilla. Cras sit amet vestibulum turpis.</p>
+
+		<p>Phasellus ornare diam lectus, pellentesque pharetra tortor ultrices ut. Pellentesque ullamcorper tincidunt nisi. Suspendisse eget pellentesque dolor. Nullam et risus orci. Aenean posuere sem sapien, vel iaculis dui congue et. Nam rutrum sollicitudin malesuada. Sed vitae eros tincidunt, finibus justo sed, lacinia nisi. Aliquam erat volutpat. Fusce tempor eros ut ante molestie accumsan.</p>
+
+		<p>Duis at lorem egestas, laoreet ante ultricies, dignissim purus. Nam sagittis, ipsum quis tempus tempor, massa ipsum lacinia libero, sit amet viverra ex tortor non tortor. Donec pellentesque eu nisi in euismod. Mauris vitae vestibulum dolor, a pulvinar est. Integer dapibus augue ac risus venenatis, et porta sapien faucibus. Mauris id pretium dolor. Curabitur sem sem, congue gravida eleifend at, venenatis sit amet magna. Cras ac neque venenatis, rutrum quam sit amet, auctor risus. Etiam accumsan ligula ac massa consequat consequat. Nullam vestibulum facilisis diam malesuada ultricies.</p>
+
+		<p>Donec eu arcu quam. Phasellus volutpat diam nibh, quis interdum ante placerat quis. Etiam id gravida felis, id faucibus felis. Ut bibendum tortor ut tortor laoreet euismod. Proin neque quam, placerat ac tellus in, pulvinar faucibus ipsum. Ut vitae semper dolor. Aliquam aliquet mollis lectus, non porttitor arcu sagittis vitae. Fusce vitae dictum enim, id posuere elit. Pellentesque ut sagittis turpis. Sed congue porta ipsum id tincidunt. Quisque tempus ut erat in volutpat. Ut bibendum lobortis mi nec viverra. Nunc maximus porttitor metus, id pulvinar justo. Maecenas sollicitudin varius sapien. Quisque sit amet orci quis dolor facilisis faucibus vel vel nunc.</p>
+
+		<p>Aliquam eu lectus ante. Mauris cursus tincidunt diam a mollis. Aliquam maximus sit amet libero id malesuada. Fusce in sem elit. Maecenas id tortor et ex ultricies molestie. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam erat volutpat. Sed suscipit urna ligula. Aliquam erat volutpat. Morbi et dolor ut massa sagittis rutrum in eu lacus. Integer nec nibh ac arcu hendrerit eleifend.</p>
+
+		<p>Maecenas ut ipsum sit amet leo viverra pellentesque. Sed nec orci congue, pulvinar nulla quis, pulvinar nibh. Quisque nibh lorem, fermentum at auctor ut, porttitor sit amet felis. Nam id semper tortor. Pellentesque at ornare odio. Aliquam ullamcorper nisi dolor, maximus venenatis enim mattis quis. Curabitur orci arcu, dictum a nisi id, ornare varius dui. Aenean laoreet tempor diam, et rutrum ex mollis id. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque tellus velit, lobortis vitae nisl id, porttitor auctor purus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse vulputate felis a erat malesuada luctus. In et risus massa. Donec erat est, consectetur sed venenatis at, sagittis a arcu.</p>
+
+		<p>Nam pharetra urna sed erat congue efficitur. Mauris tempus consectetur quam quis lobortis. Fusce vel iaculis erat, non tincidunt enim. Donec gravida arcu at libero elementum commodo. Ut nec ligula et leo mollis rutrum ut quis dui. Suspendisse egestas, augue in lobortis bibendum, quam lectus egestas eros, lacinia feugiat nisi ipsum nec tortor. Cras magna ligula, interdum vitae pharetra eu, faucibus eget ligula. Sed eget est vulputate, tristique justo sit amet, blandit sem.</p>
+
+		<p>Phasellus rutrum vitae elit nec sollicitudin. Ut at diam nec purus mollis efficitur. Nam eu nibh ante. Aenean sagittis urna eget neque interdum, facilisis vulputate justo pulvinar. Nulla facilisi. Etiam aliquet et est sed mattis. Cras id feugiat risus. Etiam vel lorem scelerisque, egestas sem vitae, posuere arcu. Vivamus sit amet justo ante. Cras diam massa, venenatis id egestas a, interdum vel lectus. Pellentesque aliquet nunc et metus convallis tincidunt. Etiam placerat pretium faucibus.</p>
+
+		<p>Cras ac nunc et nunc euismod bibendum et eu lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut quis hendrerit tortor. Proin id egestas ex. In hac habitasse platea dictumst. Aliquam a orci quis nunc commodo viverra. Fusce semper volutpat dolor eu fermentum.</p>
+
+		<p>Vestibulum varius urna vitae ex congue, vel convallis tortor congue. Pellentesque aliquet nulla vel nunc accumsan, quis mollis tortor ultrices. In laoreet dictum leo, nec cursus eros bibendum quis. Nam eu nisi pharetra, bibendum turpis ac, imperdiet lacus. Sed augue sem, tincidunt et augue vitae, rutrum dictum elit. In consectetur ipsum placerat massa malesuada, nec elementum velit egestas. Pellentesque pulvinar magna id ante congue, at venenatis lacus dictum. Sed nisl ligula, suscipit a pretium ac, aliquam in massa. Morbi nec orci eget sem convallis mattis. Mauris a dui id lorem suscipit pellentesque quis sit amet tortor. Donec a ipsum ac tellus sagittis elementum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec volutpat nunc non enim aliquam fringilla. Suspendisse at nibh in erat accumsan maximus vitae accumsan augue. Proin vitae luctus ipsum. Vestibulum sollicitudin sit amet metus et fermentum.</p>
+
+		<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse dignissim auctor ex, in molestie quam. Suspendisse orci tellus, vehicula quis viverra sit amet, cursus sed est. Donec placerat sit amet lacus eget feugiat. Quisque volutpat nisi malesuada consequat pulvinar. Ut velit orci, consequat sit amet massa eget, lacinia fermentum enim. Nullam tellus erat, vulputate ut suscipit id, feugiat eu eros. Sed lobortis, libero in scelerisque rutrum, ligula dolor mollis nisi, ac sodales ipsum turpis ac augue. Morbi tempor facilisis lectus, at cursus magna consectetur eget. Fusce laoreet leo in odio facilisis, pulvinar interdum elit tempus. Sed non auctor magna, et laoreet velit. Pellentesque eros est, efficitur vel nibh sed, tempus finibus massa. Donec elit nulla, rhoncus in bibendum in, dictum sed libero. Donec a vehicula quam.</p>
+
+		<p>Sed ultricies non nisl ac tincidunt. Nullam sed tortor ante. Curabitur rutrum in augue eget semper. Sed imperdiet orci vitae lectus efficitur tempus. Praesent non porttitor elit, vitae tempus tellus. Vestibulum sollicitudin in mauris id gravida. Donec eget arcu congue turpis blandit varius vel maximus metus. Cras ac dignissim nisl. Pellentesque cursus augue eget tellus tincidunt facilisis.</p>
+
+		<p>Quisque arcu eros, tempus quis efficitur sit amet, euismod a arcu. Ut nisl risus, elementum eu mollis quis, ultrices imperdiet ex. Curabitur eget libero lectus. Quisque vitae metus efficitur, sagittis augue eu, pulvinar ex. Nunc faucibus, libero ac tincidunt euismod, nulla felis tempor lacus, vel dapibus turpis massa nec neque. Ut hendrerit diam vel mauris malesuada blandit. Sed ornare leo velit, at gravida turpis viverra et. Ut et gravida arcu, eget placerat turpis. Quisque nec pulvinar eros. Donec tristique felis id libero lobortis, vitae sollicitudin justo pellentesque. Nam quis blandit elit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hac habitasse platea dictumst.</p>
+
+		<p>Fusce sed leo non quam posuere congue. Nunc convallis ante a consequat auctor. Donec vitae vehicula felis. Pellentesque pellentesque iaculis mi in fringilla. Suspendisse id tellus et nulla blandit tincidunt sed pellentesque leo. Morbi lacinia, odio sit amet porttitor ullamcorper, turpis sem pulvinar nunc, et pretium sem odio ut nibh. Nunc condimentum mi eros, cursus aliquet arcu auctor quis. </p>
+		</aside>
+		<div class="d">
+		<h3>D</h3>
+		<p>Phasellus urna dui, ornare in finibus quis, molestie sit amet urna. Pellentesque ut tincidunt leo. Phasellus est eros, scelerisque et convallis vitae, imperdiet nec sapien. Etiam dui ex, cursus nec vulputate id, posuere id velit. Pellentesque hendrerit, dui id rutrum vestibulum, ante risus condimentum ligula, quis pellentesque mi dui sit amet felis. Nunc suscipit laoreet aliquet. Quisque nunc est, consequat laoreet interdum eget, lacinia varius leo. Sed varius ligula arcu, vel dignissim erat fringilla vel. Maecenas pharetra tortor ut ligula vestibulum, at tempor ante posuere. Suspendisse laoreet iaculis finibus.</p>
+		</div>
 	</main>
 	<script>
     </script>
