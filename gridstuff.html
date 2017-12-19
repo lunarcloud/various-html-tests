@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Grid</title>
+    <meta name="description" content="css grid tests">
+    <meta name="theme-color" content="#1F1F1F">
+    <meta name="author" content="Sam Sarette">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+			z-index: -1;
+            background-color: #eee;
+            color: black;
+			margin: 0;
+			padding: 0;
+        }		
+		sidebar {
+			position: fixed; 
+			left: 0;
+			width: 52px;
+			top: 0;
+			bottom: 0;
+			padding: 0;
+			margin: 0;
+			background-color: #333;
+			color: #ddd;
+		}
+		sidebar:hover,
+		sidebar:active,
+		sidebar:focus {
+			z-index: 100;
+			width: 104px;
+			cursor: pointer;
+		}
+		
+		
+		sidebar:hover .small-sidebar,
+		sidebar:active .small-sidebar,
+		sidebar:focus .small-sidebar {
+			display: none!important;
+		}
+		
+		sidebar .large-sidebar {
+			display: none;
+		}
+		sidebar:hover .large-sidebar,
+		sidebar:active .large-sidebar,
+		sidebar:focus .large-sidebar {
+			display: inherit;
+		}
+		
+		sidebar ul {
+			padding: 0;
+			margin: 0;
+			padding-top: 2px;
+		}
+		
+		sidebar li {
+			padding-top: 4px;
+			padding-bottom: 4px;
+			padding-left: 2px;
+			list-style: none;
+		}
+		
+		sidebar li:hover {
+			background-color: #FFF3;
+		}
+		
+		main {
+			z-index: 0;
+			position: fixed;
+			left: 52px;
+			right: 0;
+			top: 0;
+			bottom: none;
+			background-color: #eee;
+			color: #222;
+			
+			display: grid;
+		}
+
+		.a {
+			grid-column: 1 / 3;
+			grid-row: 1;
+		}
+		.b {
+			grid-column: 3 ;
+			grid-row: 1 / 3;
+		}
+		.c {
+			grid-column: 1 ;
+			grid-row: 2 ;
+		}
+		.d {
+			grid-column: 2;
+			grid-row: 2;
+		}
+    </style>
+</head>
+<body>
+	<sidebar>
+		<ul>
+			<li class="small-sidebar" ><a>
+				<img src="http://www.placehold.it/48x48" />
+			</a></li>
+			<li class="large-sidebar" ><a>
+				<img src="http://www.placehold.it/48x48" style="margin-left: 26px;" />
+			</a></li>
+			<li><a>
+				2
+			</a></li>
+			<li><a>
+				3
+			</a></li>
+			<li><a>
+				4
+			</a></li>
+		</ul>
+	</sidebar>
+	<main>
+		<section class="a">A</section>
+		<article class="b">B</article>
+		<aside class="c">C</aside>
+		<div class="d">D</div>
+	</main>
+	<script>
+    </script>
+</body>
+</html>
