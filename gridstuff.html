@@ -15,8 +15,6 @@
             color: black;
             margin: 0;
             padding: 0;
-            min-width: 240px;
-            min-height: 448px;
         }
 		
 		.no-select,
@@ -36,70 +34,21 @@
 		
         sidebar {
             z-index: 2;
+            padding: 0;
+            margin: 0;
             position: fixed; 
             left: 0;
             width: 36px;
             transition: width 0.2s ease-out, z-index 0.2s ease-out;
-            top: 0;
+			overflow-y: auto;
+            top: -100px;
+			padding-top: 100px;
             bottom: 0;
-            padding: 0;
-            margin: 0;
             background-color: #333;
             color: #ddd;
             box-shadow: 4px 0 2px #0008;
         }
-        
-        .overriding-warning {
-            display: none;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            text-align: center;
-            margin-top: 10%;
-            height: 100%;
-        }
-
-        #height-only-warning {
-            z-index: 1;
-        }
-        #width-only-warning {
-            z-index: 2;
-        }
-        #both-dimensions-warning {
-            z-index: 3;
-        }
-            
-        @media screen and (max-height: 448px) {
-            body * {
-                display: none;
-            }
-            #height-only-warning {
-                display: block;
-            }
-        }
-        @media screen and (max-width: 240px) {
-            body * {
-                display: none;
-            }
-            #width-only-warning {
-                display: block;
-            }
-        }
-        @media screen and (max-height: 448px) and (max-width: 240px) {
-            body * {
-                display: none;
-            }
-            #height-only-warning,
-            #width-only-warning {
-                display: none!important;
-            }
-            #both-dimensions-warning {
-                display: block;
-            }
-        }
-        
+                
         sidebar:hover:not(.swipped-in),
         sidebar.swipped-out,
         sidebar:focus {
@@ -137,6 +86,9 @@
             width: 100%;
             overflow: hidden;
         }
+		sidebar > ul {
+			min-height: 440px;
+		}
         
         sidebar li {
             padding: 4px;
@@ -201,6 +153,7 @@
         .c {
             grid-column: 2;
             grid-row: 2 ;
+			column-count: 2;
         }
         .d {
             grid-column: 3 ;
@@ -257,18 +210,26 @@
             text-indent: 24px;
         }
         
+		.block-list {
+			display: flex;
+			flex-flow: row wrap;
+			justify-content: space-evenly;
+		}
+		.block-list-elem {
+			
+		}
+		#a-block-list .block-list-elem > h1 {
+			text-size: 2em;
+		}
+		.a-blocks {
+			flex: none;
+			background-color: #edede4;
+			width: 200px;
+			margin: 4px;
+		}
     </style>
 </head>
 <body>
-    <div id="height-only-warning" class="overriding-warning">
-        Please expand the height of the browser or view on a bigger screen.
-    </div>
-    <div id="width-only-warning" class="overriding-warning">
-        Please expand the width of the browser or view on a bigger screen.
-    </div>
-    <div id="both-dimensions-warning" class="overriding-warning">
-        Please expand the height and width of the browser or view on a bigger screen.
-    </div>
     <sidebar>
         <ul>
             <li><a>
@@ -326,7 +287,29 @@
     <main>
         <section class="a">
         <h1>A</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum. Aliquam vitae dui ligula. Duis sit amet sagittis ex. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Morbi volutpat urna lectus, blandit consequat enim finibus at. Donec non condimentum metus. Sed sodales, velit vel cursus facilisis, augue ligula aliquet risus, sed aliquam augue arcu eu justo.</p>
+            <p>Sed sodales, velit vel cursus facilisis, augue ligula aliquet risus, sed aliquam augue arcu eu justo.</p>
+			<div id="a-block-list" class="block-list">
+				<div class="a-blocks block-list-elem">
+					<h1>A</h1>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum.</p>
+				</div>
+				<div class="a-blocks block-list-elem">
+					<h1>A</h1>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum.</p>
+				</div>
+				<div class="a-blocks block-list-elem">
+					<h1>A</h1>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum.</p>
+				</div>
+				<div class="a-blocks block-list-elem">
+					<h1>A</h1>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum.</p>
+				</div>
+				<div class="a-blocks block-list-elem">
+					<h1>A</h1>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum.</p>
+				</div>
+			</div>
         </section>
         <article class="b">
         <h2>B</h2>
@@ -375,7 +358,7 @@
         </div>
     </main>
     <script>
-        function swipedetect(el, callback) {
+        function swipedetect(el, callback, preventScroll) {
 			"use strict";
 			
 			var touchsurface = el;
@@ -412,9 +395,11 @@
 				//e.preventDefault();
 			}, false);
 			  
-            touchsurface.addEventListener("touchmove", function(e){
-                e.preventDefault(); // prevent scrolling when inside DIV
-            }, false);
+			if (preventScroll === true) {
+				touchsurface.addEventListener("touchmove", function(e){
+					e.preventDefault(); // prevent scrolling when inside DIV
+				}, false);
+			}
           
             touchsurface.addEventListener("touchend", function(e){
                 var touchobj = e.changedTouches[0];
