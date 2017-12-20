@@ -18,6 +18,22 @@
             min-width: 320px;
             min-height: 448px;
         }
+		
+		.no-select,
+		sidebar :not(.selectable) {
+			user-select: none;
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-ms-user-select: none;
+		}
+		.selectable,
+		.selectable	* {
+			user-select: all !important;
+			-moz-user-select: all !important;
+			-webkit-user-select: all !important;
+			-ms-user-select: all !important;
+		}
+		
         sidebar {
             z-index: 2;
             position: fixed; 
@@ -302,7 +318,7 @@
                     <span class="expanded"> About</span>
                 </a></li>
             </ul>
-            <div style="height: 30px; margin-left: 10px; overflow: hidden;">
+            <div class="selectable" style="height: 30px; margin-left: 10px; overflow: hidden;">
                 &copy; <span class="expanded"> Samuel Sarette 2017</span>
             </div>
         </footer>
