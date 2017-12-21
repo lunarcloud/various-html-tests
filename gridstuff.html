@@ -19,7 +19,7 @@
 
         #sidebar-swipe-hint {
 			display: none;
-			z-index: 100;
+			z-index: -1;
 			position: fixed;
 			top: 70px;
 			left: 0px;
@@ -134,7 +134,7 @@
         sidebar li:hover,
         sidebar li:active,
         sidebar li:focus {
-            background-color: #FFF3;
+            background-color: rgba(255, 255, 255, 0.33);
         }
 
         sidebar:hover li a {
@@ -397,12 +397,15 @@
 		if (isMobile()) {
 			var swipeHint = document.getElementById("sidebar-swipe-hint");
 			swipeHint.style.display = 'block';
+			swipeHint.style.zIndex = '100';
+
 			setTimeout(function() {
 				swipeHint.classList.add("shown");
 				setTimeout(function() {
 					swipeHint.classList.remove("shown");
 					setTimeout(function() {
 						swipeHint.style.display = '';
+						swipeHint.style.zIndex = '';
 					}, 500);
 				}, 2000);
 			}, 200);
