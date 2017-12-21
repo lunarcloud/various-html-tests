@@ -16,57 +16,85 @@
             margin: 0;
             padding: 0;
         }
-		
-		.no-select,
-		sidebar :not(.selectable) {
-			user-select: none;
-			-moz-user-select: none;
-			-webkit-user-select: none;
-			-ms-user-select: none;
-		}
-		.selectable,
-		.selectable	* {
-			user-select: all !important;
-			-moz-user-select: all !important;
-			-webkit-user-select: all !important;
-			-ms-user-select: all !important;
-		}
-		
+
+        #sidebar-swipe-hint {
+			display: none;
+			z-index: 100;
+			position: fixed;
+			top: 70px;
+			left: 0px;
+			background-color: #202;
+			color: #eee;
+			padding: 100px 20px;
+			opacity: 0;
+			transition: opacity 1s;
+        }
+
+        #sidebar-swipe-hint.shown {
+			opacity: 1;
+			display: inherit;
+        }
+
+        #sidebar-swipe-hint:after {
+			position: absolute;
+			top: -48px;
+			right: -80px;
+			content: " ";
+			border-top: 160px solid transparent;
+			border-bottom: 160px solid transparent;
+			border-left: 80px solid #202;
+        }
+
+        .no-select,
+        sidebar :not(.selectable) {
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+        .selectable,
+        .selectable    * {
+            user-select: all !important;
+            -moz-user-select: all !important;
+            -webkit-user-select: all !important;
+            -ms-user-select: all !important;
+        }
+
         sidebar {
             z-index: 2;
             padding: 0;
             margin: 0;
-            position: fixed; 
+            position: fixed;
             left: 0;
             width: 36px;
             transition: width 0.2s ease-out, z-index 0.2s ease-out;
-			overflow-y: auto;
+            overflow-y: auto;
             top: -100px;
-			padding-top: 100px;
+            padding-top: 100px;
             bottom: 0;
             background-color: #333;
             color: #ddd;
             box-shadow: 4px 0 2px #0008;
         }
-                
+
         sidebar:hover:not(.swipped-in),
         sidebar.swipped-out,
         sidebar:focus {
             z-index: 10;
             width: 200px;
         }
-                
+
         sidebar .expanded {
             opacity: 0;
             transition: opacity 0.2s ease-out 0.1s;
         }
-        
+
         sidebar:hover:not(.swipped-in) .expanded,
         sidebar.swipped-out .expanded,
         sidebar:focus .expanded {
             opacity: 1;
         }
-        
+
         sidebar #main-logo {
             width: 24px;
             margin-bottom: 24px;
@@ -78,7 +106,7 @@
             width: 48px;
             margin-bottom: 0;
         }
-        
+
         sidebar ul {
             padding: 0;
             margin: 0;
@@ -86,33 +114,33 @@
             width: 100%;
             overflow: hidden;
         }
-		sidebar > ul {
-			padding-bottom: 140px;
-		}
-        
+        sidebar > ul {
+            padding-bottom: 140px;
+        }
+
         sidebar li {
             padding: 4px;
             list-style: none;
             font-size: 12pt;
             width: 200px;
         }
-        
+
         sidebar li .fa {
             width: 26px;
             text-align: center;
             font-size: 18pt;
         }
-        
+
         sidebar li:hover,
-		sidebar li:active,
-		sidebar li:focus {
+        sidebar li:active,
+        sidebar li:focus {
             background-color: #FFF3;
         }
-        
+
         sidebar:hover li a {
             cursor: pointer;
         }
-        
+
         sidebar footer {
             z-index: 1;
             background-color: #000;
@@ -127,7 +155,7 @@
             z-index: 11;
             width: 200px;
         }
-        
+
         main {
             z-index: 1;
             position: absolute;
@@ -138,7 +166,7 @@
             bottom: none;
             background-color: #eee;
             color: #222;
-            
+
             display: grid;
         }
 
@@ -153,7 +181,7 @@
         .c {
             grid-column: 2;
             grid-row: 2 ;
-			column-count: 2;
+            column-count: 2;
         }
         .d {
             grid-column: 3 ;
@@ -163,7 +191,7 @@
             color: #eee;
             padding: 6px 24px !important;
         }
-        
+
         @media screen and (max-width: 1200px) {
             .a {
                 grid-column: 1;
@@ -182,7 +210,7 @@
                 grid-row: 1 / 4;
             }
         }
-        
+
         @media screen and (max-width: 800px) {
             .d {
                 grid-column: 1 ;
@@ -202,34 +230,37 @@
                 grid-row: 4 ;
             }
         }
-        
+
         .a, .b, .c, .d {
             padding: 4px;
         }
         .a p, .b p, .c p, .d p {
             text-indent: 24px;
         }
-        
-		.block-list {
-			display: flex;
-			flex-flow: row wrap;
-			justify-content: space-evenly;
-		}
-		.block-list-elem {
-			
-		}
-		#a-block-list .block-list-elem > h1 {
-			text-size: 2em;
-		}
-		.a-blocks {
-			flex: none;
-			background-color: #edede4;
-			width: 200px;
-			margin: 4px;
-		}
+
+        .block-list {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-evenly;
+        }
+        .block-list-elem {
+
+        }
+        #a-block-list .block-list-elem > h1 {
+            text-size: 2em;
+        }
+        .a-blocks {
+            flex: none;
+            background-color: #edede4;
+            width: 200px;
+            margin: 4px;
+        }
     </style>
 </head>
 <body>
+	<div id="sidebar-swipe-hint" >
+		Swipe To Open/Close
+	</div>
     <sidebar>
         <ul>
             <li><a>
@@ -265,7 +296,7 @@
             </a></li>
         </ul>
         <footer>
-            <ul>    
+            <ul>
                 <li><a>
                     <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
                     <span class="expanded"> Info</span>
@@ -288,33 +319,33 @@
         <section class="a">
         <h1>A</h1>
             <p>Sed sodales, velit vel cursus facilisis, augue ligula aliquet risus, sed aliquam augue arcu eu justo.</p>
-			<div id="a-block-list" class="block-list">
-				<div class="a-blocks block-list-elem">
-					<h1>A</h1>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum.</p>
-				</div>
-				<div class="a-blocks block-list-elem">
-					<h1>A</h1>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum.</p>
-				</div>
-				<div class="a-blocks block-list-elem">
-					<h1>A</h1>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum.</p>
-				</div>
-				<div class="a-blocks block-list-elem">
-					<h1>A</h1>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum.</p>
-				</div>
-				<div class="a-blocks block-list-elem">
-					<h1>A</h1>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum.</p>
-				</div>
-			</div>
+            <div id="a-block-list" class="block-list">
+                <div class="a-blocks block-list-elem">
+                    <h1>A</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum.</p>
+                </div>
+                <div class="a-blocks block-list-elem">
+                    <h1>A</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum.</p>
+                </div>
+                <div class="a-blocks block-list-elem">
+                    <h1>A</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum.</p>
+                </div>
+                <div class="a-blocks block-list-elem">
+                    <h1>A</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum.</p>
+                </div>
+                <div class="a-blocks block-list-elem">
+                    <h1>A</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis lectus ligula. Duis interdum neque sed ex aliquet condimentum.</p>
+                </div>
+            </div>
         </section>
         <article class="b">
         <h2>B</h2>
             <p>Phasellus urna dui, ornare in finibus quis, molestie sit amet urna. Pellentesque ut tincidunt leo. Phasellus est eros, scelerisque et convallis vitae, imperdiet nec sapien. Etiam dui ex, cursus nec vulputate id, posuere id velit. Pellentesque hendrerit, dui id rutrum vestibulum, ante risus condimentum ligula, quis pellentesque mi dui sit amet felis. Nunc suscipit laoreet aliquet. Quisque nunc est, consequat laoreet interdum eget, lacinia varius leo. Sed varius ligula arcu, vel dignissim erat fringilla vel. Maecenas pharetra tortor ut ligula vestibulum, at tempor ante posuere. Suspendisse laoreet iaculis finibus.</p>
-            
+
             <p>Morbi nec nulla at sem euismod condimentum sit amet a lectus. Donec sed lorem a est egestas accumsan. Suspendisse vitae tempor massa. Suspendisse finibus urna eu suscipit consequat. Nam dapibus massa ac placerat egestas. Vestibulum ornare ex quis dapibus lobortis. Morbi magna justo, efficitur eu hendrerit vel, eleifend at dolor. Praesent euismod facilisis tellus quis lobortis. Aenean eleifend id metus quis aliquam. Aliquam erat volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec interdum leo ligula, at mattis dui efficitur id. Fusce erat odio, venenatis sit amet elit at, euismod dictum lectus. Nam non suscipit neque, congue imperdiet nunc. Fusce lobortis urna facilisis, vestibulum quam quis, molestie arcu. Nam eget volutpat magna, auctor porta nisi.</p>
 
         </article>
@@ -354,56 +385,74 @@
         </aside>
         <div class="d">
         <h3>D</h3>
-            <p>Ut commodo porta lorem, quis vulputate ligula egestas nec. Vestibulum non convallis tortor. Sed eros erat, molestie in ultrices sit amet, rutrum a nisi. Pellentesque nec erat fermentum, aliquam diam ac, semper eros. Nunc posuere odio quam, a pellentesque lectus tempus suscipit. Praesent dapibus massa eget ex fermentum, a ultricies mauris maximus. Phasellus ac lobortis nunc. Nullam imperdiet placerat purus, ut pulvinar libero feugiat ut. Etiam fermentum laoreet tortor vel aliquam. </p>
+            <p>Ut <span id="swipe-counter">0</span> commodo porta lorem, quis vulputate ligula egestas nec. Vestibulum non convallis tortor. Sed eros erat, molestie in ultrices sit amet, rutrum a nisi. Pellentesque nec erat fermentum, aliquam diam ac, semper eros. Nunc posuere odio quam, a pellentesque lectus tempus suscipit. Praesent dapibus massa eget ex fermentum, a ultricies mauris maximus. Phasellus ac lobortis nunc. Nullam imperdiet placerat purus, ut pulvinar libero feugiat ut. Etiam fermentum laoreet tortor vel aliquam. </p>
         </div>
     </main>
     <script>
+
+		var isMobile = function() {
+			return navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i);
+		}
+
+		if (isMobile()) {
+			var swipeHint = document.getElementById("sidebar-swipe-hint");
+			swipeHint.style.display = 'block';
+			setTimeout(function() {
+				swipeHint.classList.add("shown");
+				setTimeout(function() {
+					swipeHint.classList.remove("shown");
+					setTimeout(function() {
+						swipeHint.style.display = '';
+					}, 500);
+				}, 2000);
+			}, 200);
+		}
+
         function swipedetect(el, callback, preventScroll) {
-			"use strict";
-			
-			var touchsurface = el;
-			var swipedir;
-			var start = {
-				x: null,
-				y: null,
-			};
-			var dist = {
-				x: 0,
-				y: 0,
-			};
-			var distance = {
-				threshold: 50,
-				perpendicularThreshold: 100
-			};
-			var time = {
-				allowed: 300,
-				elapsed: null,
-				start: null
-			};
-			var handleswipe = callback || function(swipedir) {
-				console.debug("Swipped: " + swipedir);
-			};
-			  
-			touchsurface.addEventListener("touchstart", function(e){
-				var touchobj = e.changedTouches[0];
-				swipedir = "none";
-				dist.x = 0;
-				dist.y = 0;
-				start.x = touchobj.pageX;
-				start.y = touchobj.pageY;
-				time.start = Date.now(); // record time when finger first makes contact with surface
-				//e.preventDefault();
-			}, false);
-			  
-			if (preventScroll === true) {
-				touchsurface.addEventListener("touchmove", function(e){
-					e.preventDefault(); // prevent scrolling when inside DIV
-				}, false);
-			}
-          
+            "use strict";
+
+            var touchsurface = el;
+            var swipedir;
+            var start = {
+                x: null,
+                y: null,
+            };
+            var dist = {
+                x: 0,
+                y: 0,
+            };
+            var distance = {
+                threshold: 100,
+                perpendicularThreshold: 150
+            };
+            var time = {
+                allowed: 600,
+                elapsed: null,
+                start: null
+            };
+            var handleswipe = callback || function(swipedir) {
+                console.debug("Swipped: " + swipedir);
+            };
+
+            touchsurface.addEventListener("touchstart", function(e){
+                var touchobj = e.changedTouches[0];
+                swipedir = "none";
+                dist.x = 0;
+                dist.y = 0;
+                start.x = touchobj.pageX;
+                start.y = touchobj.pageY;
+                time.start = Date.now();
+            }, { passive: true});
+
+            if (preventScroll === true) {
+                touchsurface.addEventListener("touchmove", function(e){
+                    e.preventDefault();
+                }, { passive: true});
+            }
+
             touchsurface.addEventListener("touchend", function(e){
                 var touchobj = e.changedTouches[0];
-                dist.x = touchobj.pageX - start.x; 
+                dist.x = touchobj.pageX - start.x;
                 dist.y = touchobj.pageY - start.y;
                 time.elapsed = Date.now() - time.start;
                 if (time.elapsed <= time.allowed) {
@@ -415,27 +464,38 @@
                     }
                 }
                 handleswipe(swipedir);
-                //e.preventDefault();
-            }, false);
+            }, { passive: true});
         }
-        
+
         var sidebarElement = document.getElementsByTagName("sidebar")[0];
+
+        var swipeCount = 0;
+        var swipeCounterElement = document.getElementById("swipe-counter");
+
+        var undoSidebarSwipe = function(e) {
+            sidebarElement.classList.remove("swipped-out");
+            sidebarElement.classList.remove("swipped-in");
+
+            document.body.removeEventListener("click", undoSidebarSwipe);
+			swipeCounterElement.textContent = (++swipeCount);
+        }
         swipedetect(sidebarElement, function(swipedir){
-			"use strict";
+            "use strict";
             if (swipedir === "right") {
                 sidebarElement.classList.add("swipped-out");
-				sidebarElement.classList.remove("swipped-in");
-			} else if (swipedir === "left") {
-                sidebarElement.classList.remove("swipped-out");
-				sidebarElement.classList.add("swipped-in");
-			}
+                sidebarElement.classList.remove("swipped-in");
+				document.body.addEventListener("click", undoSidebarSwipe, { passive: true});
+				swipeCounterElement.textContent = (++swipeCount);
+            }
         });
-		swipedetect(document.body, function(swipedir){
-			"use strict";
-            if (sidebarElement.classList.contains("swipped-out") && swipedir === "left") {
+        swipedetect(document.body, function(swipedir){
+            "use strict";
+            if (swipedir === "left") {
                 sidebarElement.classList.remove("swipped-out");
-				sidebarElement.classList.add("swipped-in");
-			}
+                sidebarElement.classList.add("swipped-in");
+				document.body.addEventListener("click", undoSidebarSwipe, { passive: true});
+				swipeCounterElement.textContent = (++swipeCount);
+            }
         });
     </script>
 </body>
