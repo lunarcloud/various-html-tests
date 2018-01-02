@@ -24,21 +24,19 @@
 			display: block;
 			grid-column: 1;
 			grid-row: 1;
-			height: 400px;
 			width: 100%;
+			padding-bottom: 8%;
 			position: relative;
 			border: 1px solid #CCC;
 			perspective: 1100px;
 		}
 		
 		.carousel-3d {
-			transform: translateZ(-663px) rotateY(0deg);
-		}
-			
-		.carousel-3d {
-		  width: 80%;
 		  position: absolute;
+		  width: 80%;
+		  height: auto;
 		  margin: 1% 10%;
+		  transform: translateZ(-663px) rotateY(0deg);
 		  -webkit-transform-style: preserve-3d;
 			 -moz-transform-style: preserve-3d;
 			   -o-transform-style: preserve-3d;
@@ -76,7 +74,7 @@
 </head>
 <body>
 	<main>
-		<section id="carousel-container">
+		<section id="carousel-container" class="auto-height">
 			<div class="carousel-3d">
 				<div class="item"><h2>1</h2></div>
 				<div class="item"><h2>2</h2></div>
@@ -96,15 +94,14 @@
     </main>
     <script>
 	
-		function Carousel3D ( el ) {
+		function Carousel3D ( el1, el2 ) {
 			"use strict";
-			this.element = el;
+			this.element = el1;
+			this.container = el2;
 
 			this.rotation = 0;
-			//this.panelCount = 0;
-			this.panelCount = this.totalPanelCount = this.element.children.length;
 			this.theta = 0;
-
+			this.panelCount = this.element.children.length;
 			this.isHorizontal = true;
 		}
 
@@ -120,6 +117,8 @@
 			// is in 3D space
 			this.radius = Math.round( ( this.panelSize / 2) / Math.tan( Math.PI / this.panelCount ) );
 
+			var biggestHeight = 0;
+			
 			for ( i = 0; i < this.panelCount; i++ ) {
 				panel = this.element.children[i];
 				angle = this.theta * i;
@@ -127,13 +126,10 @@
 				panel.style.backgroundColor = 'hsla(' + angle + ', 100%, 50%, 0.8)';
 				// rotate panel, then push it out in 3D space
 				panel.style.transform = this.rotateFn + '(' + angle + 'deg) translateZ(' + this.radius + 'px)';
+				biggestHeight = biggestHeight > panel.clientHeight ? biggestHeight : panel.clientHeight;
 			}
-
-			// hide other panels
-			for (  ; i < this.totalPanelCount; i++ ) {
-				panel = this.element.children[i];
-				panel.style.opacity = 0;
-				panel.style.transform = 'none';
+			if (this.container.classList.contains("auto-height")) {
+				this.container.style.height = biggestHeight + "px";
 			}
 
 			// adjust rotation so panels are always flat
@@ -163,7 +159,10 @@
 		var init = function() {
 			"use strict";
 			
-			carousel = new Carousel3D( document.querySelector('#carousel-container .carousel-3d') );
+			carousel = new Carousel3D( 
+				document.querySelector('#carousel-container .carousel-3d'), 
+				document.querySelector('#carousel-container') 
+			);
 			var navButtons = document.querySelectorAll('#navigation button');
 						
 			var onNavButtonClick = function( event ) {
