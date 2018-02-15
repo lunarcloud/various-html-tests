@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)https://citizensofantiford.com/games/grid-map-generator.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Grid Path Generator</title>
+
+<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+<style>
+
+            html, body
+            {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            *
+            {
+                 -webkit-user-select: none;  /* Chrome all / Safari all */
+                -moz-user-select: none;     /* Firefox all */
+                -ms-user-select: none;      /* IE 10+ */
+
+                /* No support for these yet, use at own risk */
+                -o-user-select: none;
+                user-select: none;
+            }
+
+            body
+            {
+                background-color: #ccc;
+            }
+
+            .vertical-align {
+                position: relative;
+                top: 50%;
+                -webkit-transform: translateY(-50%);
+                -ms-transform: translateY(-50%);
+                transform: translateY(-50%);
+            }
+
+            #refresh
+            {
+                position: absolute;
+                bottom: 4px;
+                right: 4px;
+                padding: 8px 12px;
+                z-index: 100;
+            }
+
+            table
+            {
+                margin: 0 auto;
+                border-spacing: 0;
+                border-collapse: collapse;
+                width: 94%;
+            }
+
+            td
+            {
+                text-align: center;
+                vertical-align: middle;
+            }
+
+            td.room:hover
+            {
+                background-color: rgb(200, 200, 200) !important;
+            }
+            td.room.expanse:hover
+            {
+                background-color: rgb(155, 155, 200) !important;
+            }
+
+            @media (max-width: 1400px)
+            {
+                *
+                {
+                    font-size: 12px;
+                }
+            }
+
+            @media (max-width: 1200px)
+            {
+                *
+                {
+                    font-size: 10px;
+                }
+            }
+
+            @media (max-width: 900px)
+            {
+                *
+                {
+                    font-size: 8px;
+                }
+            }
+
+            @media (max-width: 768px)
+            {
+                *
+                {
+                    font-size: 6px;
+                }
+            }
+
+        </style>
+</head>
+<body>
+    <button id="refresh" onclick="window.location.reload();">refresh</button>
+    <div id="room-grid" class="vertical-align"><table></table></div>
+    <script>
+        "use strict";
+
+        function squareTDs(){
+            var size = $("td").width();
+            $("td").width(size);
+            $("td").height(size);
+        }
+        $(document).ready(squareTDs);
+        $(window).resize(squareTDs);
+
+    </script>
+    <script>
+        "use strict";
+
+        var GridMap = function(rows, columns, maxRooms) {
+            var map = this;
+            map.grid = new Array(rows);
+
+            for (var i = 0; i < rows; i++) map.grid[i] = new Array(columns);
+
+            map.generate();
+
+            return map;
+        }
+
+        GridMap.prototype.generate = function() {
+            var map = this;
+
+            /* Setup starting point */
+            var currentRow = Math.floor(map.grid.length / 2);
+            var currentColumn = 0;
+            var rooms = 1;
+
+            /* Create the first cell */
+            this.grid[currentRow][currentColumn] = new GridMapCell(map, ["start"]);
+
+            /* Create the path */
+            while (typeof(grid[currentRow]) !== "undefined" && typeof(grid[currentRow][currentColumn + 1]) !== "undefined")
+            {
+                var right = Math.random();
+                var up = typeof(grid[currentRow - 1]) == "undefined" ? 0 : Math.random();
+                var down = typeof(grid[currentRow + 1]) == "undefined" ? 0 : Math.random();
+
+                this.grid[currentRow][currentColumn].wall.right = this.grid[currentRow][currentColumn].wall.right || !right;
+                this.grid[currentRow][currentColumn].wall.top = this.grid[currentRow][currentColumn].wall.top || !up;
+                this.grid[currentRow][currentColumn].wall.bottom = this.grid[currentRow][currentColumn].wall.bottom || !down;
+
+                if (right > up && right > down)
+                {
+                    currentColumn++;
+                    if (rooms >= maxRooms) {
+                        grid[currentRow][currentColumn] = true;
+                        rooms += 1;
+                        break;
+                    }
+                }
+                if (up > right && up > down)
+                {
+                    currentRow--;
+                }
+                if (down > right && down > up)
+                {
+                    currentRow++;
+                }
+
+                this.grid[currentRow][currentColumn] = new GridMapCell(map);
+                this.grid[currentRow][currentColumn].wall.left = !right; // did we get here from the left?
+                this.grid[currentRow][currentColumn].wall.top = !down; // did we get here from the bottom?
+                this.grid[currentRow][currentColumn].wall.bottom = !up; // did we get here from the top?
+
+                rooms += 1;
+            }
+        }
+
+        GridMap.prototype.get = function(row, column) {
+            if (row < 0 || row > this.grid.length) throw "No such row";
+            if (column < 0 || column > this.grid[row].length) throw "No such column";
+
+            return this.grid[row][column];
+        }
+
+        var GridMapCell = function(parent, attributes) {
+            if (parent instanceof GridMap === false) throw "You must provide the parent GridMap!";
+
+            this.parent = parent;
+            this.wall = {
+                left: true,
+                right: true,
+                top: true,
+                bottom: true
+            }
+            this.variant = Math.ceil(Math.random() * 2); // random integer between 0 and 2 - 3 variants for each setup
+            this.attributes = attributes instanceof Array ? attributes : [];
+        }
+
+        GridMapCell.prototype.getID = function() {
+            return ""
+                + (this.wall.left ? "l" : "")
+                + (this.wall.left ? "r" : "")
+                + (this.wall.left ? "t" : "")
+                + (this.wall.left ? "b" : "")
+                + this.variant
+            ;
+        }
+
+        GridMapCell.prototype.getImage = function() {
+            return "tiles/"
+                + (this.wall.left ? "l" : "")
+                + (this.wall.left ? "r" : "")
+                + (this.wall.left ? "t" : "")
+                + (this.wall.left ? "b" : "")
+                + "/"
+                + this.variant
+                + ".jpg";
+        }
+
+    </script>
+    <script>
+        "use strict";
+
+        var maxRooms = 20;
+        var numberOfRows = Math.ceil(Math.random() * (6 - 3)) + 3; // random integer between 3 and 6
+        var numberOfColumns = Math.ceil(Math.random() * (24 - 12)) + 12; // random integer between 12 and 24
+
+        var grid = new Array(numberOfRows);
+        for (var i = 0; i < numberOfRows; i++) {
+            grid[i] = new Array(numberOfColumns);
+            for (var j = 0; j < numberOfColumns; j++) {
+                grid[i][j] = false;
+            }
+        }
+
+        //Create First cell
+        var currentRow = Math.floor(numberOfRows / 2);
+        var currentColumn = 0;
+        var rooms = 1;
+        grid[currentRow][currentColumn] = true;
+
+        // Create the path
+        while (typeof(grid[currentRow][currentColumn + 1]) != "undefined")
+        {
+            var right = Math.random();
+            var up = typeof(grid[currentRow - 1]) == "undefined" ? 0 : Math.random();
+            var down = typeof(grid[currentRow + 1]) == "undefined" ? 0 : Math.random();
+
+            if (right > up && right > down)
+            {
+                currentColumn++;
+                if (rooms >= maxRooms) {
+                    grid[currentRow][currentColumn] = true;
+                    rooms += 1;
+                    break;
+                }
+            }
+            if (up > right && up > down)
+            {
+                currentRow--;
+            }
+            if (down > right && down > up)
+            {
+                currentRow++;
+            }
+
+            grid[currentRow][currentColumn] = true;
+            rooms += 1;
+        }
+
+        var clearEmptyRows = function(grid)
+        {
+            if (grid.length == 0) return grid;
+            if (grid[0].length == 0) return grid;
+
+            for (var i = 0; i < grid.length; i++)
+            {
+                var hasRooms = false;
+                for (var j = 0; j < grid[i].length; j++)
+                {
+                    hasRooms = grid[i][j] || hasRooms;
+                }
+
+                if (hasRooms == false)
+                {
+                    grid.splice(i, 1);
+                    return clearEmptyRows(grid);
+                }
+            }
+
+            return grid;
+        }
+
+        var clearEmptyColumns = function(grid, maxColumns)
+        {
+            if (grid.length == 0) return grid;
+            if (grid[0].length == 0) return grid;
+
+            for (var i = 0; i < grid.length; i++)
+            {
+                grid[i].splice(maxColumns);
+            }
+
+            return grid;
+        }
+
+        grid = clearEmptyRows(grid);
+        grid = clearEmptyColumns(grid, currentColumn + 1);
+
+        var Room = function(grid, row, column, isStartPoint, isEndPoint)
+        {
+            var room = this;
+            room.row = row;
+            room.column = column;
+            room.isStartPoint = isStartPoint;
+            if (room.column > 0 && room.isStartPoint === true) throw "wrong!";
+            room.isEndPoint = isEndPoint;
+
+            /* If any of these are true, there is a wall to draw */
+            /* If any of these are false, they connect to a room in that direction */
+            room.wall = {
+                top: true,
+                bottom: true,
+                left: true,
+                right: true
+            };
+
+            if (typeof(grid[room.row - 1]) != "undefined" && grid[room.row - 1][room.column] == true)
+            {
+                room.wall.top = false;
+            }
+            if (typeof(grid[room.row + 1]) != "undefined" && grid[room.row + 1][room.column] == true)
+            {
+                room.wall.bottom = false;
+            }
+            if (typeof(grid[room.row][room.column - 1]) != "undefined" && grid[room.row][room.column - 1] == true)
+            {
+                room.wall.left = false;
+            }
+            if (typeof(grid[room.row][room.column + 1]) != "undefined" && grid[room.row][room.column + 1] == true)
+            {
+                room.wall.right = false;
+            }
+        }
+
+        function createRoomGrid(grid)
+        {
+            var startPointSet = false;
+            var atEnd = false;
+            var setStartPoint = false;
+            var roomGrid = new Array(grid.length);
+
+            for (var i = 0; i < grid.length; i++)
+            {
+                roomGrid[i] = new Array(grid[i].length);
+                for (var j = 0; j < grid[i].length; j++)
+                {
+                    if (grid[i][j] === true)
+                    {
+                        atEnd = j == grid[i].length - 1; // We always end with one room in the last column
+                        roomGrid[i][j] = new Room(grid, i, j, (j == 0 && !setStartPoint), atEnd);
+
+                        if (j == 0 && !setStartPoint) {
+                            setStartPoint = true;
+                        }
+                    }
+                    else
+                    {
+                        roomGrid[i][j] = false;
+                    }
+                }
+            }
+            return roomGrid;
+        }
+
+        var roomGrid = createRoomGrid(grid);
+
+        function printRoomGrid(roomGrid, query)
+        {
+            var table = "<table>";
+            for (var i = 0; i < roomGrid.length; i++)
+            {
+                table += "<tr>";
+                for (var j = 0; j < roomGrid[i].length; j++)
+                {
+                    if (roomGrid[i][j] === false)
+                    {
+                        table += "<td style='background-color: #ccc;' >&nbsp;";
+                    }
+                    else
+                    {
+                        table += "<td class='room' style='background-color: #fff; border: 1px solid #ccc;' >";
+
+                        if (roomGrid[i][j].isStartPoint) table += "<strong>Start</strong><br />";
+                        if (roomGrid[i][j].isEndPoint) table += "<strong>Finish</strong><br />";
+                        table += "[" + roomGrid[i][j].row + ", " + roomGrid[i][j].column + "]<br />";
+                    }
+
+                    table += "</td>";
+                }
+                table += "</tr>";
+            }
+            table += "</table>";
+            $(query).html(table);
+        }
+
+        printRoomGrid(roomGrid, "#room-grid");
+
+    </script>
+  </body>
+</html>
