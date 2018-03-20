@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Basic Page Needs
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    <title>Combobox Randomizer</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="theme-color" content="white" />
+
+    <!-- Mobile Specific Metas
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONT
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js" integrity="sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ" crossorigin="anonymous"></script>
+
+    <!-- CSS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+
+    <!-- Favicon
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="icon" type="image/png" href="https://placehold.it/32x32">
+
+    <style>
+    
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+        }
+
+        .pointer {
+            cursor: pointer;
+        }
+		
+		.lock {
+			/*width: fit-content;*/
+			width: 20px;
+			display: inline-block;
+		}
+		.lock:hover {
+			cursor: pointer;
+		}
+		.lock input {
+			display: none;
+		}
+		
+		.lock > input:not(:checked) ~ .fa-lock {
+			display: none;
+		}
+		.lock > input:not(:checked) ~ .fa-lock-open {
+			display: unset;
+		}
+		
+		.lock > input:checked ~ .fa-lock {
+			display: unset;
+		}
+		.lock > input:checked ~ .fa-lock-open {
+			display: none;
+		}
+
+	</style>
+
+</head>
+<body onload="setup()" class="hidden-menu-mobile">
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+  <div class="container">
+  
+        
+    <div class="row" style="margin-top: 4px;">
+      <div class="six columns">
+        <h2>Tests</h2>
+      </div>
+    </div>
+
+    <div class="row">
+      <div id="combo-container" class="four columns">
+			<div>
+				<label for='gender'>gender</label>
+				<label for='locked-gender' class="lock">
+					<input id='locked-gender' type="checkbox" />
+					<i class="fas fa-lock"></i>
+					<i class="fas fa-lock-open"></i>
+				</label>
+				<select id='gender'>
+					<option>male</option>
+					<option>female</option>
+					<option>other</option>
+				</select>
+			</div>
+			<div>
+				<label for="class">class</label>
+				<label for='locked-class' class="lock">
+					<input id='locked-class' type="checkbox" />
+					<i class="fas fa-lock"></i>
+					<i class="fas fa-lock-open"></i>
+				</label>
+				<select id='class'>
+					<option>Lower</option>
+					<option selected>Middle</option>
+					<option>Upper</option>
+				</select>
+			</div>
+			<div>
+				<label for="job">Occupation</label>
+				<label for='locked-job' class="lock">
+					<input id='locked-job' type="checkbox" />
+					<i class="fas fa-lock"></i>
+					<i class="fas fa-lock-open"></i>
+				</label>
+				<select id='job'>
+					<option>Mail Carrier</option>
+					<option>Blacksmith</option>
+					<option>Repairer</option>
+					<option>Engineer</option>
+					<option>Soldier</option>
+					<option>Captain</option>
+					<option>Bounty Hunter</option>
+					<option>Railway</option>
+				</select>
+			</div>
+            <button class="button-primary" onclick="randomize();">Randomize</button>
+			<label for="allow-uncommon"> 
+				<input id="allow-uncommon" type="checkbox">
+				Allow uncommon combinations
+			</label>
+      </div>
+	
+      <div id="description" class="eight columns"></div>
+		
+	</div>
+</div>
+
+  </div>
+  
+  <footer>
+      <div class="container">
+        <div class="row">
+          <div class="twelve columns">
+            <hr>
+            &copy; Samuel Sarette 2018
+          </div>
+        </div>
+      </div>
+  </footer>
+
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<script>
+    "use strict";
+    
+    // Attempt to get a better distributed random number than the classic method
+    Math.randomInteger = function(min,max) {
+		"use strict";
+        var MAX_UINT32 = 0xFFFFFFFF;
+        var range = max - min;
+
+        if (!(range <= MAX_UINT32)) {
+        throw new Error("Range of " + range + " covering " + min + " to " + max + " is > " + MAX_UINT32 + ".");
+        } else if (min === max) {
+            return min;
+        } else if (!(max > min)) {
+            throw new Error("max (" + max + ") must be >= min (" + min + ").");
+        }
+
+        // We need to cut off values greater than this to avoid bias in distribution
+        // over the range.
+        var maxUnbiased = MAX_UINT32 - ((MAX_UINT32 + 1) % (range + 1));
+
+        var rand;
+        do {
+            rand = crypto.getRandomValues(new Uint32Array(1))[0];
+        } while (rand > maxUnbiased);
+
+        var offset = rand % (range + 1);
+        return min + offset;
+    }
+	
+	var uncommonCombinations = [
+		{ 'class': "Upper",  'job': "Blacksmith" },
+		{ 'class': "Upper",  'job': "Soldier", 'gender': "other" }
+	];
+    
+	function randomize() {
+		"use strict";
+		var comboboxes = document.querySelectorAll("#combo-container select");
+		var activeLocks = document.querySelectorAll(".lock > input:checked");
+		var uncommonAllowed = document.getElementById("allow-uncommon").checked;
+		
+		var selections = {};
+		
+		for (var i = 0; i < activeLocks.length; i++) {
+			var property = activeLocks[i].id.replace("locked-", "");
+			selections[property] = document.getElementById(property).value;
+		}
+		
+		for (var i = 0; i < comboboxes.length; i++) {
+		  var combobox = comboboxes[i];
+		  if (selections.hasOwnProperty(combobox.id)) continue; // skip locked 
+		  var oldValue = combobox.value;
+		  var combinationIsUncommon;		  
+		  var newValue;
+		  
+		  do {
+			combinationIsUncommon = false;
+			newValue = combobox.children[Math.randomInteger(0, combobox.childElementCount - 1)].value;
+			
+			if (uncommonAllowed === false) {
+			  for (var j = 0; j < uncommonCombinations.length; j++) {
+				if (uncommonCombinations[j][combobox.id] == newValue) {
+				  for (var property in selections) {
+					if (uncommonCombinations[j][property] == selections[property]) {
+						combinationIsUncommon = true;
+					}
+				  }
+				}
+			  }
+			}
+		  } while (oldValue == newValue || combinationIsUncommon);
+		  selections[combobox.id] = combobox.value = newValue;
+		}
+		requestAnimationFrame(describe);
+	}
+		
+	function describe() {
+		"use strict";
+		var element = document.getElementById("description");
+		var values = {
+			'gender' : document.getElementById("gender").value,
+			'class' : document.getElementById("class").value,
+			'job' : document.getElementById("job").value,
+		};
+		var uncommonCombinationsSelected = [];
+		
+		for (var i = 0; i < uncommonCombinations.length; i++) {
+			var found = 0;
+			var propertiesChecked = 0;
+			for (var property in uncommonCombinations[i]) {
+				propertiesChecked++;
+				if (uncommonCombinations[i][property] == values[property]) found++;
+			}
+			if (found === propertiesChecked) uncommonCombinationsSelected.push(uncommonCombinations[i]);
+		}
+		
+		
+		var description = values.class + "-class " 
+			+ (values.gender == "other" ? "" : values.gender )
+			+ " " + values.job + ".";
+			
+		if (uncommonCombinationsSelected.length === 1) {
+			description += " The combination of ";
+		} else if (uncommonCombinationsSelected.length > 1) {
+			description += " The combinations of ";
+		}
+		for (var i = 0; i < uncommonCombinationsSelected.length; i++) {
+			var firstListed = true;
+			for (var property in uncommonCombinationsSelected[i]) {
+				if (!firstListed) description += " & ";
+				description += uncommonCombinationsSelected[i][property] + " " + property;
+				firstListed = false;
+			}
+		}
+		if (uncommonCombinationsSelected.length === 1) {
+			description += " is uncommon.";
+		} else if (uncommonCombinationsSelected.length > 1) {
+			description += " are uncommon.";
+		}
+		
+		element.textContent = description;
+	}
+	
+	function setup() {
+		"use strict";
+		var comboboxes = document.querySelectorAll("#combo-container select");
+		
+		[].forEach.call(comboboxes, function(combobox) {
+			combobox.addEventListener("change", function(){
+				requestAnimationFrame(describe);
+			});
+		});
+		
+		requestAnimationFrame(randomize);
+	}
+        
+    
+</script>
+</body>
+</html>
