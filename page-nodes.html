@@ -23,6 +23,7 @@
     <!-- CSS
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<link href="system-font.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.10/dialog-polyfill.min.css" integrity="sha256-qVjBFbunjrWQ4IikV5dkK1ziW9XKskisX1rUbCIJEhk=" crossorigin="anonymous" />
 
     <!-- Favicon
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -32,9 +33,18 @@
         body {
             max-width: 100%;
             min-height: 100vh;
-
         }
 
+		dialog {
+		  position: fixed;
+		  top: 50%;
+		  transform: translate(0, -50%);
+		}
+
+		templates {
+			display: none;
+		}
+		
         .no-select {
             user-select: none;
             -webkit-user-select: none;
@@ -76,15 +86,36 @@
 			background: rgba(0,0,0,0.4);
 			cursor: move;
 			min-height: 36px;
+			display: grid;
+			grid-template-columns: 1fr 40px;
 		}
 		
 		page header h1, h2, h3, h4, h5, h6 {
 			margin: 2px 6px;
+			grid-row: 1 / 3;
 		}
 		
-		page body {
+		page header button.edit {
+			grid-row: 1;
+		}
+		page header button.delete {
+			grid-row: 2;
+		}
+		
+		page content {
 			position: relative;
 			padding: 2px 6px;
+			height: 10vh;
+			overflow: hidden;
+		}
+		page content:after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			height: 25%;
+			background: linear-gradient(transparent,black);
 		}
 		
     </style>
@@ -98,8 +129,8 @@
 			<page id="page-a">
 				<header>
 					<h1>Page A</h1>
-					<button>edit</button>
-					<button>delete</button>
+					<button class="edit">✏</button>
+					<button class="delete">🗑</button>
 				</header>
 				<content>
 					<p>
@@ -110,8 +141,8 @@
 			<page id="page-b">
 				<header>
 					<h1>Page B</h1>
-					<button>edit</button>
-					<button>delete</button>
+					<button class="edit">✏</button>
+					<button class="delete">🗑</button>
 				</header>
 				<content>
 					<p>
@@ -122,8 +153,8 @@
 			<page id="page-c">
 				<header>
 					<h1>Page C</h1>
-					<button>edit</button>
-					<button>delete</button>
+					<button class="edit">✏</button>
+					<button class="delete">🗑</button>
 				</header>
 				<content>
 					<p>
@@ -133,8 +164,9 @@
 			</page>
 			<page id="page-d">
 				<header>
-					<button>edit</button>
-					<button>delete</button>
+					<h1></h1>
+					<button class="edit">✏</button>
+					<button class="delete">🗑</button>
 				</header>
 				<content>
 					<p>
@@ -142,6 +174,8 @@
 					</p>
 				</content>
 			</page>
+			
+			<button class="add">Add New</button>
 		</pages>
     </main>
 
@@ -149,27 +183,109 @@
         &copy; Samuel Sarette 2018
     </footer>
 
+	<templates>
+		<template id="new-page">
+			<page id="">
+				<header>
+					<h1></h1>
+					<button class="edit">✏</button>
+					<button class="delete">🗑</button>
+				</header>
+				<content>
+					<p>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
+					</p>
+				</content>
+			</page>
+		</template>
+	</templates>
 
+	<dialog id="really-delete-dialog">
+		Are you sure you want to delete it?
+		<footer>
+			<button class="yes">Yes</button>
+			<button class="no">No</button>
+		</footer>
+	</dialog>
+	
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.6.1/Sortable.min.js"></script> <!-- https://rubaxa.github.io/Sortable/ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.10/dialog-polyfill.min.js" integrity="sha256-KhfIhZkSs4GIyUPbxX6mD/9NFdY4u8nxiOa6yTHAFeA=" crossorigin="anonymous"></script>
 <script>
 	"use strict";
-    
+	
+    let deleteDialog;
+	var pageToMaybeDelete;
+	
     function onLoad() {
-        document.querySelectorAll("page").forEach(setupPageDrag);
+	
+		deleteDialog = document.getElementById("really-delete-dialog");
+		dialogPolyfill.registerDialog(deleteDialog);		
+		deleteDialog.querySelector("button.yes").addEventListener("click", evt => { reallyDelete(evt); });			
+		deleteDialog.querySelector("button.no").addEventListener("click", evt => { deleteDialog.close(); });
+			
+        let pages = document.querySelector("pages");
+		let sort = Sortable.create(pages, {
+		  animation: 50,
+		  handle: "header",
+		  draggable: "page",
+		  setData: (dataTransfer, dragEl) => {
+		    dataTransfer.setData('Text', dragEl.id);
+		  },
+		  onEnd: evt => {
+			let pageList = pages.getElementsByTagName("page");
+			for (let i = 0; i < pageList.length; i++) {
+			  console.log(pageList[i].id);
+			}
+		  }
+		});		
+		document.querySelectorAll("button.edit").forEach(setupEdit);
+		document.querySelectorAll("button.delete").forEach(setupDelete);
+		
+		document.querySelectorAll("pages button.add").forEach(button => {
+			button.addEventListener("click", () => {
+				let page = document.importNode(document.getElementById("new-page").content.querySelector("page"), true);
+				
+				page.id = `page-${Date.now()}`;
+				page.querySelector("header h1").textContent = `Page ${Date.now()}`;
+				
+				setupEdit(page.querySelector("button.edit"));
+				setupDelete(page.querySelector("button.delete"));
+				
+				pages.insertBefore(page, button);
+				scrollTo(button);
+			});
+		});
     }
 	
-	function setupPageDrag(node) {
-        node.setAttribute('draggable', 'true');
-
-        node.addEventListener('dragstart', e => {
-            e.dataTransfer.effectAllowed = 'copy'; // only dropEffect='copy' will be dropable
-            e.dataTransfer.setData('Text', node.id); // required otherwise doesn't work
-            //onStartDrag[node.id](node);
-        });
+	function setupEdit(button) {
+		button.addEventListener("click", () => {
+			let page = button.parentElement.parentElement;
+			location.href = "#edit=" + page.id;
+		});
 	}
-    
+	
+	function setupDelete(button) {
+		button.addEventListener("click", () => {
+			pageToMaybeDelete = button.parentElement.parentElement;			
+			deleteDialog.showModal();
+		});
+	}
+	
+	function reallyDelete(evt) {
+		location.href = "#delete=" + pageToMaybeDelete.id;
+		pageToMaybeDelete.remove();
+		deleteDialog.close();
+	}
+	
+	function scrollTo(element) {
+		const y = element.getBoundingClientRect().top + window.scrollY;
+		window.scroll({
+		  top: y,
+		  behavior: 'smooth'
+		});
+	}
     
 </script>
 </body>
