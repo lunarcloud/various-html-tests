@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Basic Page Needs
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    <title>Page Nodes</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="theme-color" content="white" />
+
+    <!-- Mobile Specific Metas
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONT
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link href="http://cdn.rawgit.com/Lukas-W/font-linux/v0.5/assets/font-linux.css" rel="stylesheet">
+
+    <!-- CSS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<link href="system-font.css" rel="stylesheet">
+
+    <!-- Favicon
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="icon" type="image/png" href="https://placehold.it/32x32">
+
+    <style>
+        body {
+            max-width: 100%;
+            min-height: 100vh;
+
+        }
+
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+        }
+
+        .pointer {
+            cursor: pointer;
+        }
+		
+        footer {
+            border-top: 1px solid black;
+            margin-top: 20px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        
+		pages {
+			position: relative;
+			background: grey;
+			padding: 10px;
+			display: flex;
+			flex-direction: column;
+		}
+		
+		page {
+			display: flex;
+			flex-direction: column;
+			background: white;
+			margin: 10px;
+		}
+		
+		page header {
+			top: 0px;
+			left: 0;
+			right: 0;
+			background: rgba(0,0,0,0.4);
+			cursor: move;
+			min-height: 36px;
+		}
+		
+		page header h1, h2, h3, h4, h5, h6 {
+			margin: 2px 6px;
+		}
+		
+		page body {
+			position: relative;
+			padding: 2px 6px;
+		}
+		
+    </style>
+</head>
+<body onload="onLoad()" class="">
+
+	<h1>Pages</h1>
+    
+    <main>
+		<pages>
+			<page id="page-a">
+				<header>
+					<h1>Page A</h1>
+					<button>edit</button>
+					<button>delete</button>
+				</header>
+				<content>
+					<p>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
+					</p>
+				</content>
+			</page>
+			<page id="page-b">
+				<header>
+					<h1>Page B</h1>
+					<button>edit</button>
+					<button>delete</button>
+				</header>
+				<content>
+					<p>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
+					</p>
+				</content>
+			</page>
+			<page id="page-c">
+				<header>
+					<h1>Page C</h1>
+					<button>edit</button>
+					<button>delete</button>
+				</header>
+				<content>
+					<p>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
+					</p>
+				</content>
+			</page>
+			<page id="page-d">
+				<header>
+					<button>edit</button>
+					<button>delete</button>
+				</header>
+				<content>
+					<p>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
+					</p>
+				</content>
+			</page>
+		</pages>
+    </main>
+
+    <footer>
+        &copy; Samuel Sarette 2018
+    </footer>
+
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.6.1/Sortable.min.js"></script> <!-- https://rubaxa.github.io/Sortable/ -->
+<script>
+	"use strict";
+    
+    function onLoad() {
+        document.querySelectorAll("page").forEach(setupPageDrag);
+    }
+	
+	function setupPageDrag(node) {
+        node.setAttribute('draggable', 'true');
+
+        node.addEventListener('dragstart', e => {
+            e.dataTransfer.effectAllowed = 'copy'; // only dropEffect='copy' will be dropable
+            e.dataTransfer.setData('Text', node.id); // required otherwise doesn't work
+            //onStartDrag[node.id](node);
+        });
+	}
+    
+    
+</script>
+</body>
+</html>
