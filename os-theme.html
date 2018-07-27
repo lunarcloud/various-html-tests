@@ -22,8 +22,6 @@
 
     <!-- CSS
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
 	<link href="system-font.css" rel="stylesheet">
 
     <!-- Favicon
@@ -31,7 +29,38 @@
     <link rel="icon" type="image/png" href="https://placehold.it/32x32">
 
     <style>
-    
+        body.windows {
+            color: black;
+            background-color: #F2F2F2;
+        }
+        body.macos {
+            color: black;
+            background-color: #D7D7D7;
+        }
+        body.linux {
+            color: black;
+            background-color: #F2F2F2;
+        }
+        body.ubuntu {
+            color: black;
+            background-color: #F2F2F2;
+        }
+
+        body {
+            max-width: 100%;
+            min-height: 100vh;
+
+        }
+
+        button {
+            display: inline-block;
+            cursor: pointer;
+            white-space: nowrap;
+            -ms-appearance: button;
+            -moz-appearance: button;
+            -webkit-appearance: button;
+            padding: 4px;
+        }
         .no-select {
             user-select: none;
             -webkit-user-select: none;
@@ -50,138 +79,132 @@
             margin-top: 2px !important;
             margin-bottom: 2px !important;
         }
+
         
-        #downloads-available .button.windows:hover {
-            background-color: rgba(13,216,0,0.15);
-        }
-        #downloads-available .button.osx:hover {
-            background-color: rgba(90,168,191,0.15);
-        }
-        #downloads-available .button.ubuntu-linux:hover {
-            background-color: rgba(212,119,53,0.15);
-        }
-        #downloads-available .button.other-linux:hover {
-            background-color: rgba(171,90,191,0.15);
-        }
-        
-        #downloads-available .button {
+        #downloads-available button {
             margin: 0px;
             padding: 0 14px;
             font-size: 32px;
         }
-        
-        #downloads-available .button.empty {
-            color: transparent;
-            border-color: transparent;
-            cursor: default;
+
+        #application-image {
+            float: right;
+            max-width: 256px;
+            margin-left: 12px;
+            margin-bottom: 20px;
         }
 
         @media (max-width: 640px) {
             #application-image {
+                display: block;
                 width: 100%;
-                float: none !important;
+                float: none;
+                margin-left: auto;
+                margin-right: auto;
             }
+        }
+
+        dlarea {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        dlarea > section {
+            flex-basis: fit-content;
+            flex-shrink: 0;
+            flex-grow: 1;
+
+            padding-left: 10px;
+            padding-left: 5px;
+        }
+
+        #downloads-available {
+            min-width: 320px;
+        }
+
+        footer {
+            border-top: 1px solid black;
+            margin-top: 20px;
+            padding-top: 10px;
+            padding-bottom: 10px;
         }
         
     </style>
 </head>
-<body onload="onLoad()" class="hidden-menu-mobile">
+<body onload="onLoad()" class="">
 
-  <!-- Primary Page Layout
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-
-  <div class="container">
-  
-        
-    <div class="row" style="margin-top: 4px;">
-      <div class="six columns">
+    <div>
         <h2>Software Project</h2>
-      </div>
     </div>
     
-    <div class="row">
-      <div class="twelve columns">
-        <img id="application-image" src="http://placehold.it/256x256" style="float: right; max-width: 100%; margin-left: 12px; margin-bottom: 20px;" >
+    <div>
+        <img id="application-image" src="http://placehold.it/256x256" >
         <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
         </p>
-      </div>
     </div>
-    
-    
-    <div class="row">
-    
-      <div class="six columns">
+
+    <dlarea>
+        <section>
           <div id="supported">
             <h5>Download</h5>
             <p id="minimum-requirements">&nbsp;</p>
-            <a id="download" class="button button-primary" href="" download >
+            <button id="download" href="" download >
                 <i class="fa fa-download"></i>
-                <span id="main-platform">&nbsp;</span>
-            </a>
+                Download for <span id="main-platform">&nbsp;</span>
+            </button>
           </div>
           <div id="unsupported" style="display: none;">
             <h5>Unsupported System</h5>
             <p id="unsupported-message"></p>
             <p>Please select from the list of supported systems.</p>
           </div>
+        </section>
 
-      </div>
-      
-      <div class="six columns">
-        <h5>Supported Systems</h5>
-        
-        <div id="downloads-available" class="no-select">
-            <div style="padding-bottom: 4px;">
-                <span style="float: left; margin-right: 40px;">64 bit</span>
-                <a class="button windows" onclick='switchDownload("Windows", "amd64");' title="Windows (64-bit)">
-                    <i class="fa fa-windows"></i>
-                </a>
-                <a class="button osx" onclick='switchDownload("Mac OS X", "amd64");' title="Mac OS X">
-                    <i class="fa fa-apple"></i>
-                </a>
-                <a class="button ubuntu-linux" onclick='switchDownload("Ubuntu", "amd64");' title="Ubuntu (64-bit)">
-                    <i class="fl-ubuntu-inverse"></i>
-                </a> 
-                <a class="button other-linux" onclick='switchDownload("Linux", "amd64");' title="Linux (64-bit)">
-                    <i class="fa fa-linux"></i>
-                </a> 
-            </div>
-            <div style="display: inline-block; padding-top: 4px; border-top: 1px solid #ccc;">
-                <span style="float: left; margin-right: 40px;">32 bit</span>
-                <a class="button windows" onclick='switchDownload("Windows", "x86");' title="Windows (64-bit)">
-                    <i class="fa fa-windows"></i>
-                </a>
-                <a class="button empty"><i class="fa fa-apple"></i></span></a>
-                <!--<a class="button osx" onclick='switchDownload("Mac OS X", "x86");' title="Mac OS X (32-bit)">
-                    <i class="fa fa-apple"></i>
-                </a>-->
-                <a class="button ubuntu-linux" onclick='switchDownload("Ubuntu", "x86");' title="Ubuntu (32-bit)">
-                    <i class="fl-ubuntu-inverse"></i>
-                </a>
-                <a class="button other-linux" onclick='switchDownload("Linux", "x86");' title="Linux (32-bit)">
-                    <i class="fa fa-linux"></i>
-                </a>
-            </div>
-        </div>
-        
-      </div>
-    </div>
-  </div>
-    </div>
+        <section>
+            <h5>Supported Systems</h5>
 
-  </div>
-  
-  <footer">
-      <div class="container">
-        <div class="row">
-          <div class="twelve columns">
-            <hr>
-            &copy; Samuel Sarette 2016
-          </div>
-        </div>
-      </div>
-  </footer>
+            <div id="downloads-available" class="no-select">
+                <div style="padding-bottom: 4px;">
+                    <span style="float: left; margin-right: 40px;">64 bit</span>
+                    <button class="windows" onclick='switchDownload("Windows", "amd64");' title="Windows (64-bit)">
+                        <i class="fa fa-windows"></i>
+                    </button>
+                    <button class="osx" onclick='switchDownload("Mac OS X", "amd64");' title="Mac OS X">
+                        <i class="fa fa-apple"></i>
+                    </button>
+                    <button class="ubuntu-linux" onclick='switchDownload("Ubuntu", "amd64");' title="Ubuntu (64-bit)">
+                        <i class="fl-ubuntu-inverse"></i>
+                    </button>
+                    <button class="other-linux" onclick='switchDownload("Linux", "amd64");' title="Linux (64-bit)">
+                        <i class="fa fa-linux"></i>
+                    </button>
+                </div>
+                <div style="display: inline-block; padding-top: 4px; border-top: 1px solid #ccc;">
+                    <span style="float: left; margin-right: 40px;">32 bit</span>
+                    <button class="windows" onclick='switchDownload("Windows", "x86");' title="Windows (64-bit)">
+                        <i class="fa fa-windows"></i>
+                    </button>
+                    <button class="empty" style="visibility: hidden;"><i class="fa fa-apple"></i></span></button>
+                    <!--<a class="button osx" onclick='switchDownload("Mac OS X", "x86");' title="Mac OS X (32-bit)">
+                        <i class="fa fa-apple"></i>
+                    </a>-->
+                    <button class="ubuntu-linux" onclick='switchDownload("Ubuntu", "x86");' title="Ubuntu (32-bit)">
+                        <i class="fl-ubuntu-inverse"></i>
+                    </button>
+                    <button class="other-linux" onclick='switchDownload("Linux", "x86");' title="Linux (32-bit)">
+                        <i class="fa fa-linux"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </dlarea>
+
+    <footer>
+        &copy; Samuel Sarette 2016
+    </footer>
 
 
 <!-- End Document
@@ -358,9 +381,10 @@
     
     function switchDownload(os, arch)
     {
+        document.body.classList.remove("windows", "macos", "ubuntu", "linux");
         var osNotFoundAtAll = true;
+
         for (var i in downloads) { if (os in downloads[i]) { osNotFoundAtAll = false; } }
-        
         if (osNotFoundAtAll || arch in downloads == false ||  os in downloads[arch] == false)
         {
             document.getElementById("supported").style.display = "none";
@@ -375,6 +399,7 @@
         }
 
         console.debug("Switching to " + os + " " + arch);
+        document.body.classList.add(os.toLowerCase());
         document.getElementById("unsupported").style.display = "none";
         document.getElementById("supported").style.display = "";
         
