@@ -13,40 +13,40 @@
 		main {
 			text-align: center;
 		}
-		
+
 		#conversation-button {
 			padding: 20px 40px;
 			font-size: 80px;
 		}
-		
+
 		#conversation-button[disabled] {
 		}
-		
+
 		#conversation-button[disabled] .fa-microphone {
 			display: none;
 		}
-		
+
 		#conversation-button:not([disabled]) .fa-microphone-slash {
 			display: none;
 		}
-		
+
 		#conversation-button.listening .fa-microphone,
 		#conversation-button.listening .fa-microphone-slash {
 			display: none;
 		}
-		
+
 		#conversation-button:not(.listening) .fa-assistive-listening-systems {
 			display: none;
 		}
-		
+
 		#typed-out {
 			display: block;
-			margin: 0 auto;	
+			margin: 0 auto;
 		}
 		#typed-out-button {
 			display: block;
 			padding: 4px 8px;
-			margin: 0 auto;	
+			margin: 0 auto;
 		}
     </style>
 </head>
@@ -63,7 +63,7 @@
 		</div>
     </main>
     <script>
-	
+
 		function get(url, accept, parse, successCallback, errorCallback) {
 			if (typeof(parse) !== "function") {
 				parse = function(a){return a};
@@ -90,40 +90,50 @@
 
 			xhr.open("GET", url, true);
 			if (typeof(accept) === "string") xhr.setRequestHeader('Accept', accept);
-			xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
 			xhr.send();
 			return xhr.onreadystatechange();
 		}
-		
+
 		function getJSON(url, successCallback, errorCallback) {
 			return get(url, 'application/json, text/javascript', JSON.parse, successCallback, errorCallback);
 		}
-		
+
 		function getXML(url, successCallback, errorCallback) {
 			return get(url, 'application/xml, text/xml', function (str) {
 				return ( new window.DOMParser() ).parseFromString(str, "text/xml");
 			}, successCallback, errorCallback);
 		}
-	
+
 		var synth = null;
-		
-		function say(text) {
+
+		function say(text, restartListenIfStopped) {
 			if (text == undefined || text == "" || text == null) return;
-			
+
 			console.debug("Saying: " + text);
 			synth = new SpeechSynthesisUtterance(text);
 			synth.lang = 'en-US';
+
+			if (recognizer !== null) {
+				recognizer.stop();
+				if (restartListenIfStopped !== false) {
+					synth.onend = function() {
+						createRecognizer();
+					}
+				}
+			}
 			window.speechSynthesis.speak(synth);
 		}
-		
+
 		var recognizer = null;
+		var stopListening;
 		function createRecognizer() {
 			recognizer = new supportedSpeechRecognition();
-			
+
 			//recognizer.lang = "en";
 			recognizer.continuous = true;
-			recognizer.interimResults = true;
-			recognizer.onstart = function(){
+			recognizer.interimResults = false;
+
+			recognizer.onaudiostart = function(event) {
 				console.debug("Recogniztion API started");
 			}
 			var final_transcript = '';
@@ -139,12 +149,23 @@
 				heard(final_transcript);
 			}
 
-			recognizer.onend = function(){
+			var wantedToStopListening = false;
+
+			stopListening = function() {
+				wantedToStopListening = true;
+				recognizer.stop();
+			};
+
+			recognizer.onaudioend = function(event) {
 				recognizer = null;
 				console.debug("Recogniztion API stopped");
 				document.getElementById("conversation-button").classList.remove("listening");
+				if (wantedToStopListening !== true) {
+					event.preventDefault();
+					requestAnimationFrame(createRecognizer);
+				}
 			}
-					
+
 			recognizer.start();
 			if (recognizer == null) {
 				alert("Speech Recognition not working, please allow this page microphone access.");
@@ -152,7 +173,8 @@
 			}
 			document.getElementById("conversation-button").classList.add("listening");
 		}
-	
+
+
 		var supportedSpeechRecognition;
 		var init = function() {
 			"use strict";
@@ -160,49 +182,53 @@
 				alert("Speech Synthesis not supported.");
 				return;
 			}
-			
+
 			supportedSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition;
 			if ( typeof(supportedSpeechRecognition) !== "object" && typeof(supportedSpeechRecognition) !== "function" ) {
 				alert("Speech Recognition not supported.");
 				return;
 			}
-			
-			say("Hello, I can tell you a joke or the weather.");
-			
+
 			var conversationButton = document.getElementById("conversation-button");
 			conversationButton.addEventListener("click", function(event) {
 				if (recognizer == null) {
 					createRecognizer(true);
 				} else {
 					recognizer.abort();
-					recognizer.onend();
 				}
 			}, {passive: true});
 			conversationButton.removeAttribute("disabled");
+
+			requestAnimationFrame(function() {
+				createRecognizer();
+				requestAnimationFrame(function() {
+					say("Hello, I can tell you a joke or the weather.");
+				});
+			});
 		};
 
 		window.addEventListener( 'DOMContentLoaded', init, false);
-		
+
 		function randomIntBetween(min, max) {
 			return Math.floor(Math.random()*(max-min+1)+min);
 		}
 		function oneOf(items) {
 			return items[Math.floor(Math.random()*items.length)];;
 		}
-		
+
 		function getRandomTemp(southernHemisphere) {
 			var today = new Date();
 			var heatRating = today.getMonth() - 1;
-		
+
 			heatRating = Math.abs(
-				heatRating > 5 
-					? 6 - (heatRating - 6) 
+				heatRating > 5
+					? 6 - (heatRating - 6)
 					: heatRating
 				) + 1;
 			if (southernHemisphere === true) {
 				heatRating = 8 - heatRating;
 			}
-			
+
 			var f = randomIntBetween(
 				(heatRating * 13) - 20,
 				(heatRating * 16)
@@ -214,7 +240,7 @@
 				f: f
 			}
 		}
-		
+
 		function sayRandomWeather() {
 			var temp = getRandomTemp();
 			var possibleSkyConditions = ["sunny", "cloudy", "mostly cloudy"];
@@ -231,32 +257,54 @@
 				possibleSkyConditions.push("hail");
 			}
 			var skyConditions = oneOf(possibleSkyConditions);
-			
+
 			say("I'm going to guess the weather is " + skyConditions + " and the temperature is " + temp.f + "° fahrenheit, or " + temp.c + "° celsius...");
 		}
-		
+
+		function paresAction(text, action) {
+			var matches = text.match(new RegExp(action.setup, 'gi'));
+			if ( matches !== null && matches.length > 0) {
+				if (typeof(action.answer) === "function") {
+					action.answer();
+				} else {
+					say(action.answer);
+				}
+				return true;
+			}
+			return false;
+		}
+
 		function heard(text) {
 			console.debug("Heard: " + text);
 			document.getElementById("typed-out-text").value = text;
 			for (var i = 0; i < actions.length; i++) {
-				var matches = text.match(new RegExp(actions[i].setup, 'gi'));
-				if ( matches !== null && matches.length > 0) {
-					if (typeof(actions[i].answer) === "function") {
-						actions[i].answer();
-					} else {
-						say(actions[i].answer);
-					}
-					break;
-				}
+				if ( parseAction(text, actions[i]) ) return;
+			}
+			for (var i = 0; i < everPresentActions.length; i++) {
+				if ( parseAction(text, everPresentActions[i]) ) return;
 			}
 		}
-		
+
 		var actions;
-		
+
 		function nextListenFor(nextActions) {
 			actions = nextActions;
 		}
-		
+
+		var lastAnswer;
+		var everPresentActions = [
+			{
+				setup: "(again|another|repeat)",
+				answer: function() {
+					if (typeof(lastAnswer) == "function") {
+						lastAnswer();
+					} else {
+						say("Sorry, I don't remember what I said last time.");
+					}
+				}
+			}
+		];
+
 		var topLevelActions = [
 			{
 				setup: "(tell me|i want to hear) a joke",
@@ -288,7 +336,7 @@
 							}
 						]);
 					};
-					
+
 					if ("geolocation" in navigator) {
 					  navigator.geolocation.getCurrentPosition(function(position) {
 						console.debug("Detected " + (position.coords.latitude < 0 ? "sou" : "nor") + "thern hemisphere");
@@ -301,11 +349,20 @@
 					  askHemisphere();
 					}
 				}
+			},
+			{
+				setup: "(ok stop|quit|stop listening|I'm done)",
+				answer: function() {
+					if (recognizer !== null) {
+						stopListening();
+						say("Okay", false);
+					}
+				}
 			}
 		];
-				
+
 		nextListenFor(topLevelActions)
-		
+
     </script>
 </body>
 </html>
