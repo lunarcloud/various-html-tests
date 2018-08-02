@@ -44,7 +44,7 @@
 		templates {
 			display: none;
 		}
-		
+
         .no-select {
             user-select: none;
             -webkit-user-select: none;
@@ -56,27 +56,35 @@
         .pointer {
             cursor: pointer;
         }
-		
+
         footer {
             border-top: 1px solid black;
             margin-top: 20px;
             padding-top: 10px;
             padding-bottom: 10px;
         }
-        
+
 		pages {
-			background: grey;
-			overflow-x: hidden;
 			font-family: Vollkorn;
 			font-size: 17px;
+			background: white;
+        }
 
+        navigation.flat {
+            display: none;
+        }
+
+        pages:not(.flat) {
 			display: flex;
 			flex-direction: row;
+			overflow-x: hidden;
 		}
-		
+
 		page {
-			background: white;
 			padding: 2px 6px;
+		}
+
+		page:not(.flat) {
 			width: calc(100% - 10px);
 			flex-shrink: 0;
 		}
@@ -129,7 +137,7 @@
             </div>
             <div id="other-controls">
                 <button><i class="fa fa-play"></i> </button>
-                <button><i class="fa fa-expand"></i></button>
+                <button onclick="togglePagesFlatness()"><i class="fa fa-expand"></i></button>
                 <button><i class="fa fa-book"></i></button>
                 <button onclick="window.print(); return false;"><i class="fa fa-print"></i></button>
                 <button><i class="fa fa-pencil"></i></button>
@@ -187,13 +195,27 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <script>
 	"use strict";
-	
-	let currentPage = 1;
+
+	let currentPage;
 
     function onLoad() {
-        currentPage = 1;
-        scrollToPage(currentPage);
+        scrollToPage(1);
     }
+
+	function togglePagesFlatness() {
+        let pages = document.getElementsByTagName("pages")[0];
+        let pageNavigation = document.getElementsByTagName("navigation")[0];
+
+        if (pages.classList.contains("flat")) {
+            pages.classList.remove("flat");
+            pageNavigation.classList.remove("flat");
+        } else {
+            pages.classList.add("flat");
+            pageNavigation.classList.add("flat");
+        }
+
+        scrollToPage(1);
+	}
 
     function scrollToPage(index) {
         if (index < 1) return;
