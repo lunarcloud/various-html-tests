@@ -35,6 +35,11 @@
             margin: 0;
         }
 
+		pages, page, authors, labels, posted, updated {
+            display: block;
+		}
+
+
 		dialog {
 		  position: fixed;
 		  top: 50%;
@@ -71,7 +76,7 @@
         }
 
         navigation.flat {
-            display: none;
+            visibility: hidden;
         }
 
         pages:not(.flat) {
@@ -84,9 +89,144 @@
 			padding: 2px 6px;
 		}
 
-		page:not(.flat) {
+		page {
 			width: calc(100% - 10px);
 			flex-shrink: 0;
+		}
+
+		authors a {
+            text-decoration: none;
+		}
+
+		authors images {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            align-items: stretch;
+            height: 150px;
+        }
+        authors images > a {
+            width: 100%;
+        }
+        authors images > a > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 20%;
+        }
+
+        authors names a {
+            white-space: nowrap;
+        }
+
+		authors names a:before {
+            color: initial;
+		}
+
+		authors names a:first-child:before {
+            content: "by ";
+		}
+
+		authors names a:not(:last-child):not(:nth-last-child(2)):not(:only-of-type):after {
+            content: ", ";
+		}
+
+		authors names a:last-child:not(:only-of-type):before {
+            content: " and ";
+		}
+
+		posted:before {
+            content: "Posted on";
+		}
+
+		updated:before {
+            content: "Updated on";
+		}
+
+        info {
+            text-align: center;
+        }
+
+		info details {
+            text-align: start;
+        }
+		info details summary {
+            font-weight: bold;
+		}
+
+		info details summary + * {
+            margin-top: 0;
+		}
+
+		controls > *,
+		#font-selection {
+            margin-bottom: 6px;
+		}
+
+		#font-selection {
+            width: 100%;
+		}
+
+		#zoom-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+		}
+
+		#other-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+		}
+
+		#hat-tips {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+		}
+
+		navigation {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+		}
+
+		main {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            grid-template-rows: repeat(3, auto) 70px 1fr repeat(2, auto);
+		}
+
+		h1.title {
+            grid-column: 1/3;
+            grid-row: 1;
+            text-align: center;
+            margin: 0;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            border-bottom: 2px dashed #333;
+		}
+		info {
+            grid-column: 1;
+            grid-row: 2;
+		}
+		controls {
+            grid-column: 1;
+            grid-row: 3;
+		}
+
+		navigation {
+            grid-column: 1;
+            grid-row: 4;
+		}
+
+		pages {
+            grid-column: 2;
+            grid-row: 2 / 6;
+            border-left: 2px dashed #333;
+		}
+
+		comments {
+            grid-column: 1/3;
+            grid-row: 6;
+            border-top: 2px dashed #333;
 		}
 
     </style>
@@ -94,15 +234,22 @@
 <body onload="onLoad()" class="">
 
     <main>
+        <h1 class="title">Title</h1>
 
         <info>
-            <h1>Title</h1>
-            <img src="https://via.placeholder.com/150x150">
-            <authors>
-                <author>John Doe</author>
-                <author>Joe Shmoe</author>
-            </authors>
             <type>a story</type>
+            <authors>
+                <images>
+                    <a href="#"><img src="https://via.placeholder.com/150x350"></a>
+                    <a href="#"><img src="https://via.placeholder.com/150x150"></a>
+                    <a href="#"><img src="https://via.placeholder.com/350x150"></a>
+                </images>
+                <names>
+                    <a href="#">John Doe</a>
+                    <a href="#">Joe Shmoe</a>
+                    <a href="#">Felicia Goodbye</a>
+                </names>
+            </authors>
             <labels>
                 <label>canon</label>
                 <label>in-progress</label>
@@ -113,11 +260,11 @@
             <updated>
                 <time datetime="2018-07-08">July 8th</time>
             </updated>
-            <abstract>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis.
-                </p>
-            </abstract>
+            <details>
+                <summary>Description</summary>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>Mauris congue tortor leo, eu dignissim neque pellentesque quis.</p>
+            </details>
         </info>
         <controls>
             <div id="text-controls">
@@ -131,9 +278,11 @@
                     <option value="'Helvetica Neue', Helvetica, Arial, sans-serif" default-size="16px">Helvetica</option>
                     <option value="Georgia, serif" default-size="16px">Georgia</option>
                 </select>
-                <button><i class="fa fa-search-plus"></i></button>
-                <button><i class="fa fa-search"></i></button>
-                <button><i class="fa fa-search-minus"></i></button>
+                <span id="zoom-controls">
+                    <button><i class="fa fa-search-plus"></i></button>
+                    <button><i class="fa fa-search"></i></button>
+                    <button><i class="fa fa-search-minus"></i></button>
+                </span>
             </div>
             <div id="other-controls">
                 <button><i class="fa fa-play"></i> </button>
@@ -143,17 +292,17 @@
                 <button><i class="fa fa-pencil"></i></button>
                 <button href="#comments"><i class="fa fa-comment"></i></button>
             </div>
-            <div id="hatTips" class="btn-group">
+            <div id="hat-tips">
                 <button><i class="fa fa-thumbs-up"></i></button>
-                <span class="count">4</span>
+                <span class="count">1</span>
                 <i class="fa fa-user"></i>
-                <span class="count">0</span>
+                <span class="count">4</span>
             </div>
         </controls>
 
         <navigation>
-            <button id="navigate-previous" onclick="scrollToPage(currentPage-1);">previous</button>
-            <button id="navigate-next" onclick="scrollToPage(currentPage+1);">next</button>
+            <button id="navigate-previous" onclick="scrollToPage(currentPage-1);" disabled>previous</button>
+            <button id="navigate-next" onclick="scrollToPage(currentPage+1);" disabled>next</button>
         </navigation>
 
 		<pages>
@@ -165,6 +314,9 @@
 			</page>
 			<page id="page-b">
                 <h1>Page B</h1>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
+                </p>
                 <p>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
                 </p>
@@ -182,6 +334,29 @@
                 </p>
 			</page>
 		</pages>
+
+		<comments>
+            <h2>Comments</h2>
+            <comment>
+                <author>Jane Doe</author>
+                <posted>
+                    <time datetime="2018-07-07">July 7th</time>
+                </posted>
+                <content>
+                    Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl.
+                </content>
+            </comment>
+            <comment>
+                <author>John Smith</author>
+                <posted>
+                    <time datetime="2018-08-29">August 31st</time>
+                </posted>
+                <content>
+                    Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor.
+                </content>
+            </comment>
+		</comments>
+
     </main>
 
     <footer>
@@ -197,8 +372,13 @@
 	"use strict";
 
 	let currentPage;
+	let totalPages = 1;
 
     function onLoad() {
+        totalPages = document.querySelectorAll("pages page").length;
+        if (totalPages === 1) {
+            document.getElementsByTagName("navigation")[0].style.display = 'none';
+        }
         scrollToPage(1);
     }
 
@@ -213,24 +393,24 @@
             pages.classList.add("flat");
             pageNavigation.classList.add("flat");
         }
-
         scrollToPage(1);
 	}
 
     function scrollToPage(index) {
-        if (index < 1) return;
-        if (index > document.querySelectorAll("pages > page").length) return;
+        if (totalPages === 1 || index < 1 || index > totalPages) return;
+        currentPage = index;
+        document.getElementById("navigate-previous").disabled = currentPage <= 1;
+        document.getElementById("navigate-next").disabled = currentPage >= totalPages;
 
         let pages = document.getElementsByTagName("pages")[0];
         let page = document.querySelector("page:nth-child(" + index + ")");
-        const x = page.getBoundingClientRect().left + pages.scrollLeft;
-		pages.scroll({ left: x, behavior: 'smooth' });
-		currentPage = index;
+        const x = page.getBoundingClientRect().left - pages.getBoundingClientRect().left + pages.scrollLeft;
+        requestAnimationFrame(() => pages.scroll({ left: x, behavior: 'smooth' }));
     }
 
 	function scrollTo(element) {
 		const y = element.getBoundingClientRect().top + window.scrollY;
-		window.scroll({ top: y, behavior: 'smooth' });
+		requestAnimationFrame(() => window.scroll({ top: y, behavior: 'smooth' }));
 	}
 
 </script>
