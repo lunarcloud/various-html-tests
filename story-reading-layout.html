@@ -35,10 +35,19 @@
             margin: 0;
         }
 
-		pages, page, authors, labels, posted, updated {
+		pages, page, labels {
             display: block;
 		}
 
+		authors, posted, updated {
+            display: inline-block;
+		}
+
+        #edit-button {
+            position: absolute;
+            right: 6px;
+            top: 2px;
+        }
 
 		dialog {
 		  position: fixed;
@@ -75,8 +84,29 @@
 			background: white;
         }
 
+        .tip-icons {
+            margin-top: 4px;
+            margin-left: 4px;
+            margin-right: 4px;
+        }
+
+        navigation {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-evenly;
+
+            background-color: #333;
+            color: white;
+        }
+
+        navigation > button {
+            text-align: center;
+            display: inline-block;
+            width: 50%;
+        }
+
         navigation.flat {
-            visibility: hidden;
+            display: none;
         }
 
         pages:not(.flat) {
@@ -104,7 +134,8 @@
             flex-wrap: nowrap;
             justify-content: space-between;
             align-items: stretch;
-            height: 150px;
+            min-height: 100%;
+            height: 64px;
         }
         authors images > a {
             width: 100%;
@@ -136,124 +167,149 @@
             content: " and ";
 		}
 
-		posted:before {
-            content: "Posted on";
+		info posted:before {
+            content: ", posted ";
+		}
+		comments posted:before {
+            content: "posted ";
 		}
 
-		updated:before {
-            content: "Updated on";
+		info updated:before {
+            content: ", updated ";
 		}
 
-        info {
-            text-align: center;
-        }
-
-		info details {
-            text-align: start;
-        }
-		info details summary {
+        details summary {
+            margin-top: 4px;
+            margin-bottom: 0;
             font-weight: bold;
-		}
-
-		info details summary + * {
+        }
+        details > p {
             margin-top: 0;
-		}
+            margin-bottom: 4px;
+        }
 
-		controls > *,
-		#font-selection {
-            margin-bottom: 6px;
-		}
+        navigation {
+            background-color: #333;
+        }
+        navigation > button {
+            color: #ccc;
+        }
+        navigation > button[disabled],
+        navigation > button:hover[disabled],
+        navigation > button:active[disabled] {
+            background-color: transparent;
+            color: transparent;
+        }
 
-		#font-selection {
-            width: 100%;
+        navigation > button {
+            font-size: 20px;
+            border: 0;
+            background: transparent;
 		}
+        navigation > button:hover {
+            background-color: #666;
+            color: #ddd;
+        }
+        navigation > button:active {
+            background-color: #999;
+            color: #eee;
+        }
 
-		#zoom-controls {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-		}
-
-		#other-controls {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-		}
-
-		#hat-tips {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-		}
-
-		navigation {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-		}
-
-		main {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            grid-template-rows: repeat(3, auto) 70px 1fr repeat(2, auto);
-		}
-
-		h1.title {
-            grid-column: 1/3;
-            grid-row: 1;
-            text-align: center;
+        h1.title {
             margin: 0;
             padding-top: 4px;
             padding-bottom: 4px;
-            border-bottom: 2px dashed #333;
+        }
+
+		container {
+            display: grid;
+            grid-template-columns: auto 1fr 200px;
+            grid-template-rows: repeat(3, auto) 70px 1fr repeat(2, auto);
 		}
-		info {
+        container > authors {
             grid-column: 1;
-            grid-row: 2;
-		}
+            grid-row: 1;
+
+            width: 200px;
+            max-width: 20vw;
+        }
+
+        info {
+            grid-column: 2 / 4;
+            grid-row: 1;
+
+            padding: 0 6px;
+        }
+
 		controls {
-            grid-column: 1;
-            grid-row: 3;
+            grid-column: 1 / 4;
+            grid-row: 2;
+
+            padding: 6px;
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-between;
+            background-color: #333;
+            color: white;
 		}
 
 		navigation {
-            grid-column: 1;
-            grid-row: 4;
+            grid-column: 3;
+            grid-row: 5;
+
+            background-color: #333;
+            color: white;
 		}
 
-		pages {
-            grid-column: 2;
-            grid-row: 2 / 6;
-            border-left: 2px dashed #333;
+		main {
+            grid-column: 1 / 4;
+            grid-row: 3 / 7;
+        }
+
+        pages {
+            box-shadow: 2px 1px 4px -2px #ccc;
+            margin-right: 6px;
 		}
 
 		comments {
-            grid-column: 1/3;
-            grid-row: 6;
-            border-top: 2px dashed #333;
+            grid-column: 1 / 4;
+            grid-row: 7;
+
+            padding: 0 6px;
 		}
+
+        comments > details summary {
+            display: flex;
+            flex-flow: row wrap;
+            align-content: space-between;
+        }
+        comments > details summary author {
+            flex-grow: 1;
+        }
 
     </style>
 </head>
 <body onload="onLoad()" class="">
 
-    <main>
-        <h1 class="title">Title</h1>
-
+    <container>
+        <authors>
+            <images>
+                <a href="#"><img src="https://via.placeholder.com/150x350"></a>
+                <a href="#"><img src="https://via.placeholder.com/150x150"></a>
+                <a href="#"><img src="https://via.placeholder.com/350x150"></a>
+            </images>
+        </authors>
         <info>
+            <a id="edit-button" href="#"><i class="fa fa-pencil"></i></a>
+            <h1 class="title">Title</h1>
             <type>a story</type>
             <authors>
-                <images>
-                    <a href="#"><img src="https://via.placeholder.com/150x350"></a>
-                    <a href="#"><img src="https://via.placeholder.com/150x150"></a>
-                    <a href="#"><img src="https://via.placeholder.com/350x150"></a>
-                </images>
                 <names>
                     <a href="#">John Doe</a>
                     <a href="#">Joe Shmoe</a>
                     <a href="#">Felicia Goodbye</a>
                 </names>
             </authors>
-            <labels>
-                <label>canon</label>
-                <label>in-progress</label>
-            </labels>
             <posted>
                 <time datetime="2018-07-07">July 7th</time>
             </posted>
@@ -265,9 +321,13 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 <p>Mauris congue tortor leo, eu dignissim neque pellentesque quis.</p>
             </details>
+            <labels>
+                <label>canon</label>
+                <label>in-progress</label>
+            </labels>
         </info>
         <controls>
-            <div id="text-controls">
+            <text-controls>
                 <select id="font-selection">
                     <option value="'Vollkorn', sans-serif" default-size="17px">Vollkorn</option>
                     <option value="'Libre Baskerville', 'Palatino Linotype', 'Book Antiqua', Palatino, serif" default-size="14px">Baskerville</option>
@@ -278,86 +338,93 @@
                     <option value="'Helvetica Neue', Helvetica, Arial, sans-serif" default-size="16px">Helvetica</option>
                     <option value="Georgia, serif" default-size="16px">Georgia</option>
                 </select>
-                <span id="zoom-controls">
-                    <button><i class="fa fa-search-plus"></i></button>
-                    <button><i class="fa fa-search"></i></button>
-                    <button><i class="fa fa-search-minus"></i></button>
-                </span>
-            </div>
-            <div id="other-controls">
-                <button><i class="fa fa-play"></i> </button>
+                <button><i class="fa fa-search-plus"></i></button>
+                <button><i class="fa fa-search"></i></button>
+                <button><i class="fa fa-search-minus"></i></button>
+            </text-controls>
+            <other-controls>
+                <button onclick="readToMe()"><i class="fa fa-play"></i> </button>
                 <button onclick="togglePagesFlatness()"><i class="fa fa-expand"></i></button>
-                <button><i class="fa fa-book"></i></button>
+                <button onclick="downloadEBook()"><i class="fa fa-download"></i></button>
                 <button onclick="window.print(); return false;"><i class="fa fa-print"></i></button>
-                <button><i class="fa fa-pencil"></i></button>
-                <button href="#comments"><i class="fa fa-comment"></i></button>
-            </div>
-            <div id="hat-tips">
                 <button><i class="fa fa-thumbs-up"></i></button>
-                <span class="count">1</span>
-                <i class="fa fa-user"></i>
-                <span class="count">4</span>
-            </div>
+                <span id="member-tips" class="count">1</span>
+                <i class="fa fa-user tip-icons"></i>
+                <span id="anon-tips" class="count">4</span>
+                <i class="fa fa-question tip-icons"></i>
+            </other-controls>
         </controls>
 
-        <navigation>
-            <button id="navigate-previous" onclick="scrollToPage(currentPage-1);" disabled>previous</button>
-            <button id="navigate-next" onclick="scrollToPage(currentPage+1);" disabled>next</button>
-        </navigation>
-
-		<pages>
-			<page id="page-a">
-                <h1>Page A</h1>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
-                </p>
-			</page>
-			<page id="page-b">
-                <h1>Page B</h1>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
-                </p>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
-                </p>
-			</page>
-			<page id="page-c">
-                <h1>Page C</h1>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
-                </p>
-			</page>
-			<page id="page-d">
-                <h1></h1>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
-                </p>
-			</page>
-		</pages>
+        <main>
+            <pages>
+                <page id="page-a">
+                    <h1>Page A</h1>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
+                    </p>
+                </page>
+                <page id="page-b">
+                    <h1>Page B</h1>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
+                    </p>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
+                    </p>
+                </page>
+                <page id="page-c">
+                    <h1>Page C</h1>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
+                    </p>
+                </page>
+                <page id="page-d">
+                    <h1></h1>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue tortor leo, eu dignissim neque pellentesque quis. Donec a ante sagittis, scelerisque ante non, bibendum enim. Fusce elementum tristique nisi, eget scelerisque nulla vehicula quis. Morbi vehicula suscipit risus aliquet semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum condimentum hendrerit. Etiam tincidunt consectetur enim, vel euismod augue hendrerit tristique. Mauris ac lacus at nulla interdum interdum. Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl. Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor. Pellentesque sed justo eget sem dignissim porttitor quis ut nisl. Donec at risus ut mi tincidunt blandit. Suspendisse potenti.
+                    </p>
+                </page>
+            </pages>
+            <navigation>
+                <button id="page-prev" onclick="scrollToPage(currentPage-1);" disabled>
+                    <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+                </button>
+                <button id="page-next" onclick="scrollToPage(currentPage+1);" disabled>
+                    <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                </button>
+            </navigation>
+        </main>
 
 		<comments>
             <h2>Comments</h2>
-            <comment>
-                <author>Jane Doe</author>
-                <posted>
-                    <time datetime="2018-07-07">July 7th</time>
-                </posted>
+            <form>
+                <button style="width: 18%; float: right; height: 100px;">Comment</button>
+                <textarea style="width: 80%; height: 100px;"></textarea>
+            </form>
+            <details open>
+                <summary>
+                    <author>Jane Doe</author>
+                    <posted>
+                        <time datetime="2018-07-07">July 7th</time>
+                    </posted>
+                </summary>
                 <content>
                     Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl.
                 </content>
-            </comment>
-            <comment>
-                <author>John Smith</author>
-                <posted>
-                    <time datetime="2018-08-29">August 31st</time>
-                </posted>
+            </details>
+            <details open>
+                <summary>
+                    <author>Jane Doe</author>
+                    <posted>
+                        <time datetime="2018-07-07">July 7th</time>
+                    </posted>
+                </summary>
                 <content>
-                    Nunc libero dui, vulputate quis tincidunt sed, condimentum et turpis. Donec ornare fermentum sagittis. Donec lobortis velit ut leo sollicitudin fringilla. Mauris mauris ex, gravida a rutrum vitae, condimentum sit amet dolor.
+                    Aenean pulvinar, ligula ac ullamcorper tempus, orci justo volutpat massa, sed venenatis augue sem interdum nisl.
                 </content>
-            </comment>
+            </details>
 		</comments>
-
-    </main>
+    </container>
 
     <footer>
         &copy; Samuel Sarette 2018
@@ -399,8 +466,8 @@
     function scrollToPage(index) {
         if (totalPages === 1 || index < 1 || index > totalPages) return;
         currentPage = index;
-        document.getElementById("navigate-previous").disabled = currentPage <= 1;
-        document.getElementById("navigate-next").disabled = currentPage >= totalPages;
+        document.getElementById("page-prev").disabled = currentPage <= 1;
+        document.getElementById("page-next").disabled = currentPage >= totalPages;
 
         let pages = document.getElementsByTagName("pages")[0];
         let page = document.querySelector("page:nth-child(" + index + ")");
@@ -409,9 +476,23 @@
     }
 
 	function scrollTo(element) {
+        if (typeof(element) === "string") element = document.querySelector(element);
 		const y = element.getBoundingClientRect().top + window.scrollY;
 		requestAnimationFrame(() => window.scroll({ top: y, behavior: 'smooth' }));
 	}
+
+	function readToMe() {
+        let pages = document.getElementsByTagName("pages")[0];
+        let text = "";
+        if (pages.classList.contains("flat")) {
+            text = pages.textContent;
+        } else {
+            let currentPageElement = pages.querySelector("page:nth-child(" + currentPage + ")");
+            text = currentPageElement.textContent;
+        }
+        let utterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(utterance);
+    }
 
 </script>
 </body>
