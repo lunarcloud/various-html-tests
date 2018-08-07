@@ -90,7 +90,8 @@
 
 		pages {
 			font-family: var(--read-font);
-			font-size: 17px;
+            font-size: 17px;
+            font-size-adjust: 0.54;
 			background: white;
         }
 
@@ -275,9 +276,9 @@
 		}
 
 		controls > * > *,
-		controls > * > zoom > *,
-		controls > * > hats > *,
-		controls > * > navigation > * {
+		controls zoom > *,
+		controls hats > *,
+		controls navigation > * {
             font-size: 18px;
 		}
 
@@ -325,7 +326,6 @@
 			controls, navigation {
 				display: none;
 			}
-
         }
 
     </style>
@@ -380,23 +380,18 @@
                     <option value="Georgia, serif" default-size="16px">Georgia</option>
                 </select>
                 <zoom>
-					<button><i class="fa fa-search-plus"></i></button>
-					<button><i class="fa fa-search"></i></button>
-					<button><i class="fa fa-search-minus"></i></button>
+					<button onclick="adjustTextZoom(0.05);"><i class="fa fa-search-plus"></i></button>
+					<button onclick="resetTextZoom();"><i class="fa fa-search"></i></button>
+					<button onclick="adjustTextZoom(-0.05);"><i class="fa fa-search-minus"></i></button>
                 </zoom>
             </text-controls>
             <other-controls>
+                <button onclick="toggleLike()"><i id="toggle-like-icon" class="fa fa-thumbs-o-up"></i></button>
+                <button onclick="showLikes()"><span id="total-likes" class="count">5</span></button>
                 <button onclick="readToMe()"><i class="fa fa-play"></i> </button>
                 <button onclick="togglePagesFlatness()"><i class="fa fa-expand"></i></button>
                 <button onclick="downloadEBook()"><i class="fa fa-download"></i></button>
                 <button onclick="printPage()"><i class="fa fa-print"></i></button>
-                <hats>
-					<button><i class="fa fa-thumbs-up"></i></button>
-					<span id="member-tips" class="count">1</span>
-					<i class="fa fa-user tip-icons"></i>
-					<span id="anon-tips" class="count">4</span>
-					<i class="fa fa-question tip-icons"></i>
-                </hats>
 				<navigation class="mini">
 					<button id="page-prev-mini" onclick="scrollToPage(currentPage-1);" disabled>
 						<i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
@@ -483,14 +478,29 @@
         &copy; Samuel Sarette 2018
     </footer>
 
+    <dialog id="likes-dialog">
+        <header>Likes</header>
+        <span id="anon-likes" class="count">4</span>
+        <i class="fa fa-question tip-icons"></i>
+        <hr>
+        <span id="member-likes" class="count">1</span>
+        <i class="fa fa-user tip-icons"></i>
+        <footer>
+            <button>Close</button>
+        </footer>
+    </dialog>
+
 	<templates>
 	</templates>
 
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.10/dialog-polyfill.min.js" integrity="sha256-KhfIhZkSs4GIyUPbxX6mD/9NFdY4u8nxiOa6yTHAFeA=" crossorigin="anonymous"></script>
 <script>
 	"use strict";
-
+	const initialFontSizeAdjust = window.getComputedStyle(document.getElementsByTagName("pages")[0]).fontSizeAdjust;
+	let youLike = false;
+    let likesDialog;
 	let currentPage;
 	let totalPages = 1;
 
@@ -498,9 +508,14 @@
         totalPages = document.querySelectorAll("pages page").length;
         if (totalPages === 1) {
             let navigations = document.querySelectorAll("container navigation");
-            for (let i in navigations) navigations[i].style.display = 'none';
+            for (let i = 0; i < navigations.length; i++) navigations[i].style.display = 'none';
         }
         scrollToPage(1);
+
+        likesDialog = document.getElementById("likes-dialog");
+        dialogPolyfill.registerDialog(likesDialog);
+        likesDialog.querySelector("footer button").addEventListener("click", evt => likesDialog.close());
+
         document.body.addEventListener("keydown", evt => {
             if (document.activeElement != document.body) return;
             if (evt.key == 'ArrowLeft')  scrollToPage(currentPage-1);
@@ -514,10 +529,10 @@
 
         if (pages.classList.contains("flat")) {
             pages.classList.remove("flat");
-            for (let i in navigations) navigations[i].classList.remove("flat");
+            for (let i = 0; i < navigations.length; i++) navigations[i].classList.remove("flat");
         } else {
             pages.classList.add("flat");
-            for (let i in navigations) navigations[i].classList.add("flat");
+            for (let i = 0; i < navigations.length; i++) navigations[i].classList.add("flat");
         }
         scrollToPage(1);
 	}
@@ -564,6 +579,35 @@
 
     function changeFont(selector) {
 		document.body.style.setProperty("--read-font", selector.value);
+    }
+
+    function downloadEBook() {
+        window.location.href = "#";
+    }
+
+    function showLikes() {
+        likesDialog.showModal();
+    }
+
+    function toggleLike() {
+        youLike = !youLike;
+        let likes = parseInt(document.getElementById("total-likes").textContent);
+        likes += youLike ? 1 : -1;
+        document.getElementById("total-likes").textContent = likes;
+
+        let likeIndicator = document.getElementById("toggle-like-icon");
+        likeIndicator.classList.remove("fa-thumbs-up", "fa-thumbs-o-up");
+        likeIndicator.classList.add("fa-thumbs" + (youLike ? "" : "-o") + "-up");
+    }
+
+    function resetTextZoom() {
+        document.getElementsByTagName("pages")[0].style.fontSizeAdjust = initialFontSizeAdjust;
+    }
+
+    function adjustTextZoom(amount) {
+        let currentAdjust = document.getElementsByTagName("pages")[0].style.fontSizeAdjust;
+        let fontSizeAdjust = parseFloat(currentAdjust == "" ? initialFontSizeAdjust : currentAdjust);
+        document.getElementsByTagName("pages")[0].style.fontSizeAdjust = fontSizeAdjust + amount;
     }
 
 </script>
