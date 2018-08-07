@@ -501,6 +501,11 @@
             for (let i in navigations) navigations[i].style.display = 'none';
         }
         scrollToPage(1);
+        document.body.addEventListener("keydown", evt => {
+            if (document.activeElement != document.body) return;
+            if (evt.key == 'ArrowLeft')  scrollToPage(currentPage-1);
+            if (evt.key == 'ArrowRight') scrollToPage(currentPage+1);
+        }, {passive: true});
     }
 
 	function togglePagesFlatness() {
