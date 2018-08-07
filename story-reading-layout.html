@@ -515,13 +515,12 @@
     "use strict";
     /* Speech Synthesis (browser talking) */
 
-    var speaking = false;
     var stopTalking = false;
     var voice = undefined;
 
     function setVoice() {
-        if (typeof(window.speechSynthesis) == "undefined") return;
-        var voices = window.speechSynthesis.getVoices();
+        if (typeof(speechSynthesis) == "undefined") return;
+        var voices = speechSynthesis.getVoices();
         if (voices.length == 0) return;
 
         for (var i = 0; i < voices.length; i++) {
@@ -540,24 +539,31 @@
         }
     }
 
-    setVoice();
-    if (typeof(window.speechSynthesis) != "undefined") {
-        window.speechSynthesis.onvoiceschanged = () => setVoice();
+    if (typeof(speechSynthesis) != "undefined") {
+        speechSynthesis.onvoiceschanged = () => setVoice();
     }
 
     function speak(text, callback) {
         shutUp();
+        setVoice();
 
         let utterance = new SpeechSynthesisUtterance(text.trim().replace(/\s+/g, ' '));
         if (voice !== undefined) utterance.voice = voice;
         stopTalking = false;
-        speaking = true;
+        utterance.volume = 1; // 0 to 1
+        utterance.rate = 1; // 0.1 to 10
+        utterance.pitch = 1; //0 to 2
         utterance.text = text;
-        utterance.onend = () => {
-            if (typeof(callback) === 'function') callback();
-            speaking = false;
-        };
+        utterance.lang = 'en-US';
+        if (typeof(callback) === 'function') utterance.onend = callback;
         speechSynthesis.speak(utterance);
+
+        // This bit is a fix for a long-standing browser bug
+        let r = setInterval(function () {
+            console.log(speechSynthesis.speaking);
+            if (!speechSynthesis.speaking) clearInterval(r);
+            else speechSynthesis.resume();
+        }, 14000);
     }
 
     function shutUp() {
@@ -671,7 +677,7 @@
     }
 
     function toggleTTS() {
-        if (speaking)  shutUp();
+        if (speechSynthesis.speaking) shutUp();
         else readToMe();
     }
 
@@ -684,7 +690,7 @@
             let currentPageElement = pages.querySelector("page:nth-child(" + currentPage + ")");
             text = currentPageElement.textContent;
         }
-        
+
         let speakingIndicator = document.getElementById("tts-icon");
         speakingIndicator.classList.remove("fa-play");
         speakingIndicator.classList.add("fa-stop");
