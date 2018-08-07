@@ -401,7 +401,7 @@
             <other-controls>
                 <button onclick="toggleLike()"><i id="toggle-like-icon" class="fa fa-thumbs-o-up"></i></button>
                 <button onclick="showLikes()"><span id="total-likes" class="count">5</span></button>
-                <button onclick="toggleTTS()"><i id="tts-icon" class="fa fa-play"></i> </button>
+                <button class="tts-required" onclick="toggleTTS()"><i id="tts-icon" class="fa fa-play"></i> </button>
                 <button onclick="togglePagesFlatness()"><i class="fa fa-expand"></i></button>
                 <button onclick="downloadAsFile()"><i class="fa fa-download"></i></button>
                 <button onclick="printPage()"><i class="fa fa-print"></i></button>
@@ -539,7 +539,10 @@
         }
     }
 
-    if (typeof(speechSynthesis) != "undefined") {
+    if (typeof(speechSynthesis) == "undefined") {
+        let ttsElements = document.getElementsByClassName("tts-required");
+        for (let i = 0; i < ttsElements.length; i++) ttsElements.style.display = 'none';
+    } else {
         speechSynthesis.onvoiceschanged = () => setVoice();
     }
 
