@@ -267,17 +267,19 @@
             padding: 0 6px;
         }
 
-		controls {
+        controls {
             grid-column: 1 / 3;
             grid-row: 2;
 
+            z-index: 2;
             padding: 0 6px;
             display: flex;
             flex-flow: row wrap;
             justify-content: space-between;
             background-color: #333;
             color: white;
-		}
+            box-shadow: 0 2px 4px -1px black;
+        }
 
 		controls > * > *,
 		controls zoom > *,
@@ -307,6 +309,7 @@
         }
 
         pages {
+            z-index: 1;
             box-shadow: 0 4px 4px 0 #ccc;
 		}
 
