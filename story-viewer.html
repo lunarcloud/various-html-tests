@@ -539,11 +539,11 @@
         }
     }
 
-    if (typeof(speechSynthesis) == "undefined") {
-        let ttsElements = document.getElementsByClassName("tts-required");
-        for (let i = 0; i < ttsElements.length; i++) ttsElements.style.display = 'none';
-    } else {
+    if ('speechSynthesis' in window) {
         speechSynthesis.onvoiceschanged = () => setVoice();
+    } else {
+        let ttsElements = document.getElementsByClassName("tts-required");
+        for (let i = 0; i < ttsElements.length; i++) ttsElements[i].style.display = 'none';
     }
 
     function speak(text, callback) {
@@ -680,6 +680,8 @@
     }
 
     function toggleTTS() {
+		if (!'speechSynthesis' in window) return;
+
         if (speechSynthesis.speaking) shutUp();
         else readToMe();
     }
