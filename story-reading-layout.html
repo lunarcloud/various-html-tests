@@ -403,7 +403,7 @@
                 <button onclick="showLikes()"><span id="total-likes" class="count">5</span></button>
                 <button onclick="readToMe()"><i class="fa fa-play"></i> </button>
                 <button onclick="togglePagesFlatness()"><i class="fa fa-expand"></i></button>
-                <button onclick="downloadEBook()"><i class="fa fa-download"></i></button>
+                <button onclick="downloadAsFile()"><i class="fa fa-download"></i></button>
                 <button onclick="printPage()"><i class="fa fa-print"></i></button>
 				<navigation class="mini">
 					<button id="page-prev-mini" onclick="scrollToPage(currentPage-1);" disabled>
@@ -638,7 +638,7 @@
 		document.body.style.setProperty("--read-font", selector.value);
     }
 
-    function downloadEBook() {
+    function downloadAsFile() {
         window.location.href = "#";
     }
 
