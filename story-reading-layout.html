@@ -597,7 +597,7 @@
                 closestPage = i + 1;
             }
         }
-        scrollToPage(closestPage);
+        if (closestPageDistance > 2) scrollToPage(closestPage);
     }
 
 	function readToMe() {
