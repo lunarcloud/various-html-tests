@@ -387,9 +387,9 @@
                     <option value="Georgia, serif" default-size="16px">Georgia</option>
                 </select>
                 <zoom>
-					<button onclick="adjustTextZoom(0.05);"><i class="fa fa-search-plus"></i></button>
+					<button onclick="adjustTextZoom(1);"><i class="fa fa-search-plus"></i></button>
 					<button onclick="resetTextZoom();"><i class="fa fa-search"></i></button>
-					<button onclick="adjustTextZoom(-0.05);"><i class="fa fa-search-minus"></i></button>
+					<button onclick="adjustTextZoom(-1);"><i class="fa fa-search-minus"></i></button>
                 </zoom>
             </text-controls>
             <other-controls>
@@ -507,7 +507,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.10/dialog-polyfill.min.js" integrity="sha256-KhfIhZkSs4GIyUPbxX6mD/9NFdY4u8nxiOa6yTHAFeA=" crossorigin="anonymous"></script>
 <script>
 	"use strict";
-	const initialFontSizeAdjust = window.getComputedStyle(document.getElementsByTagName("pages")[0]).fontSizeAdjust;
+	const initialFontSize = parseInt(window.getComputedStyle(document.getElementsByTagName("pages")[0]).fontSize);
 	let youLike = false;
     let likesDialog;
 	let currentPage;
@@ -610,13 +610,13 @@
     }
 
     function resetTextZoom() {
-        document.getElementsByTagName("pages")[0].style.fontSizeAdjust = initialFontSizeAdjust;
+        document.getElementsByTagName("pages")[0].style.fontSize = "";
     }
 
-    function adjustTextZoom(amount) {
-        let currentAdjust = document.getElementsByTagName("pages")[0].style.fontSizeAdjust;
-        let fontSizeAdjust = parseFloat(currentAdjust == "" ? initialFontSizeAdjust : currentAdjust);
-        document.getElementsByTagName("pages")[0].style.fontSizeAdjust = fontSizeAdjust + amount;
+    function adjustTextZoom(adjustment) {
+        let currentSize = document.getElementsByTagName("pages")[0].style.fontSize;
+        let size = parseFloat(currentSize == "" ? initialFontSize : currentSize);
+        document.getElementsByTagName("pages")[0].style.fontSize = (size + adjustment) + "px";
     }
 
 </script>
