@@ -536,13 +536,12 @@
         }, {passive: true});
 
         let pages = document.getElementsByTagName("pages")[0];
-        pages.addEventListener("touchstart", evt => {
-            console.debug("pages touchstart");
-            pages.style.overflowX = 'auto';
-        }, {passive: true});
-        pages.addEventListener("touchend", evt => {
+        window.addEventListener("resize", () => scrollToPage(currentPage), {passive: true})
+        pages.addEventListener("touchstart", () => pages.style.overflowX = 'auto', {passive: true});
+        pages.addEventListener("touchend", () => {
             console.debug("pages touchend");
             pages.style.overflowX = '';
+            snapToNearestPage();
         }, {passive: true});
     }
 
@@ -580,6 +579,24 @@
 		const y = element.getBoundingClientRect().top + window.scrollY;
 		requestAnimationFrame(() => window.scroll({ top: y, behavior: 'smooth', passive: true }));
 	}
+
+	function snapToNearestPage() {
+        let pages = document.getElementsByTagName("pages")[0];
+        const pagesPosition = pages.getBoundingClientRect().left + pages.scrollLeft;
+        let pageList = pages.querySelectorAll("page");
+
+        let closestPage = 0;
+        let closestPageDistance = 10000;
+
+        for (var i = 0; i < pageList.length; i++) {
+            let pageX = pageList[i].getBoundingClientRect().left - pages.getBoundingClientRect().left + pages.scrollLeft;
+            if (Math.abs(pagesPosition - pageX) < closestPageDistance) {
+                closestPageDistance = Math.abs(pagesPosition - pageX);
+                closestPage = i + 1;
+            }
+        }
+        scrollToPage(closestPage);
+    }
 
 	function readToMe() {
         let pages = document.getElementsByTagName("pages")[0];
