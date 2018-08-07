@@ -584,7 +584,7 @@
 
 	function snapToNearestPage() {
         let pages = document.getElementsByTagName("pages")[0];
-        const pagesPosition = pages.getBoundingClientRect().left + pages.scrollLeft;
+        const pagesPosition = pages.scrollLeft;
         let pageList = pages.querySelectorAll("page");
 
         let closestPage = 0;
