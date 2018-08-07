@@ -541,7 +541,7 @@
         pages.addEventListener("touchend", () => {
             console.debug("pages touchend");
             pages.style.overflowX = '';
-            requestAnimationFrame(() => snapToNearestPage());
+            setTimeout(() => snapToNearestPage(), 300);
         }, {passive: true});
     }
 
