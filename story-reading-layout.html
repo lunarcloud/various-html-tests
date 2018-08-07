@@ -540,11 +540,13 @@
         let pages = document.getElementsByTagName("pages")[0];
         window.addEventListener("resize", () => scrollToPage(currentPage), {passive: true})
         pages.addEventListener("touchstart", () => pages.style.overflowX = 'auto', {passive: true});
-        pages.addEventListener("touchend", () => {
+        let touchScrollStop =  () => {
             console.debug("pages touchend");
             pages.style.overflowX = '';
             requestAnimationFrame(snapToNearestPage);
-        }, {passive: true});
+        };
+        el.addEventListener("touchcancel", touchScrollStop);
+        pages.addEventListener("touchend", touchScrollStop);
     }
 
 	function togglePagesFlatness() {
