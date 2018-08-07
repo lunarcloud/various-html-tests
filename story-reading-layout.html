@@ -537,9 +537,11 @@
 
         let pages = document.getElementsByTagName("pages")[0];
         pages.addEventListener("touchstart", evt => {
+            console.debug("pages touchstart");
             pages.style.overflowX = 'auto';
         }, {passive: true});
         pages.addEventListener("touchend", evt => {
+            console.debug("pages touchend");
             pages.style.overflowX = '';
         }, {passive: true});
     }
