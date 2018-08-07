@@ -534,6 +534,14 @@
             if (evt.key == 'ArrowLeft')  scrollToPage(currentPage-1);
             if (evt.key == 'ArrowRight') scrollToPage(currentPage+1);
         }, {passive: true});
+
+        let pages = document.getElementsByTagName("pages")[0];
+        pages.addEventListener("touchstart", evt => {
+            pages.style.overflowX = 'auto';
+        }, {passive: true});
+        pages.addEventListener("touchend", evt => {
+            pages.style.overflowX = '';
+        }, {passive: true});
     }
 
 	function togglePagesFlatness() {
