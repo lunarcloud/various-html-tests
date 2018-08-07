@@ -401,7 +401,7 @@
             <other-controls>
                 <button onclick="toggleLike()"><i id="toggle-like-icon" class="fa fa-thumbs-o-up"></i></button>
                 <button onclick="showLikes()"><span id="total-likes" class="count">5</span></button>
-                <button onclick="readToMe()"><i class="fa fa-play"></i> </button>
+                <button onclick="toggleTTS()"><i id="tts-icon" class="fa fa-play"></i> </button>
                 <button onclick="togglePagesFlatness()"><i class="fa fa-expand"></i></button>
                 <button onclick="downloadAsFile()"><i class="fa fa-download"></i></button>
                 <button onclick="printPage()"><i class="fa fa-print"></i></button>
@@ -513,6 +513,61 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.10/dialog-polyfill.min.js" integrity="sha256-KhfIhZkSs4GIyUPbxX6mD/9NFdY4u8nxiOa6yTHAFeA=" crossorigin="anonymous"></script>
 <script>
     "use strict";
+    /* Speech Synthesis (browser talking) */
+
+    var speaking = false;
+    var stopTalking = false;
+    var voice = undefined;
+
+    function setVoice() {
+        if (typeof(window.speechSynthesis) == "undefined") return;
+        var voices = window.speechSynthesis.getVoices();
+        if (voices.length == 0) return;
+
+        for (var i = 0; i < voices.length; i++) {
+            if ( voices[i].voiceURI.indexOf("UK") != -1 && voices[i].voiceURI.indexOf("Female") != -1 ) {
+                voice = voices[i];
+            }
+        }
+
+        if (voice !== undefined) return;
+
+        // settle for anything female
+        for (var i = 0; i < voices.length; i++) {
+            if ( voices[i].voiceURI.indexOf("Female") != -1 ) {
+                voice = voices[i];
+            }
+        }
+    }
+
+    setVoice();
+    if (typeof(window.speechSynthesis) != "undefined") {
+        window.speechSynthesis.onvoiceschanged = () => setVoice();
+    }
+
+    function speak(text, callback) {
+        shutUp();
+
+        let utterance = new SpeechSynthesisUtterance(text.trim().replace(/\s+/g, ' '));
+        if (voice !== undefined) utterance.voice = voice;
+        stopTalking = false;
+        speaking = true;
+        utterance.text = text;
+        utterance.onend = () => {
+            if (typeof(callback) === 'function') callback();
+            speaking = false;
+        };
+        speechSynthesis.speak(utterance);
+    }
+
+    function shutUp() {
+        speechSynthesis.cancel();
+        stopTalking = true;
+    }
+</script>
+<script>
+    "use strict";
+    "use strict";
 
     function setupScrollEvents(el) {
         let timer, pre_direction = 0;
@@ -615,6 +670,11 @@
         scrollToPage(closestPage, false);
     }
 
+    function toggleTTS() {
+        if (speaking)  shutUp();
+        else readToMe();
+    }
+
 	function readToMe() {
         let pages = document.getElementsByTagName("pages")[0];
         let text = "";
@@ -624,8 +684,15 @@
             let currentPageElement = pages.querySelector("page:nth-child(" + currentPage + ")");
             text = currentPageElement.textContent;
         }
-        let utterance = new SpeechSynthesisUtterance(text);
-        window.speechSynthesis.speak(utterance);
+        
+        let speakingIndicator = document.getElementById("tts-icon");
+        speakingIndicator.classList.remove("fa-play");
+        speakingIndicator.classList.add("fa-stop");
+
+        speak(text, () => {
+            speakingIndicator.classList.remove("fa-stop");
+            speakingIndicator.classList.add("fa-play");
+        });
     }
 
 
