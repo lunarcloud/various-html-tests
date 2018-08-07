@@ -541,7 +541,7 @@
         window.addEventListener("resize", () => scrollToPage(currentPage), {passive: true})
         pages.addEventListener("touchstart", () => pages.style.overflowX = 'auto', {passive: true});
         let touchScrollStop =  () => {
-            console.debug("pages touchend");
+            e.preventDefault();
             pages.style.overflowX = '';
             requestAnimationFrame(snapToNearestPage);
         };
