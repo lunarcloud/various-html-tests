@@ -294,6 +294,37 @@
             font-size: 18px;
 		}
 
+		@media screen and (min-width: 360px) and (max-width: 768px) {
+
+			controls {
+				justify-content: space-around;
+			}
+
+			text-controls {
+				display: flex;
+				flex-flow: row wrap;
+				justify-content: space-between;
+				width: 100%;
+			}
+			other-controls {
+				width: 100%;
+			}
+			other-controls navigation.mini {
+				float: right;
+			}
+
+			#edit-button,
+			controls > * > *,
+			controls zoom > *,
+			controls hats > *,
+			controls navigation > * {
+				font-size: 24px;
+			}
+			central > navigation.full > button {
+				font-size: 36px;
+			}
+		}
+
 		controls zoom,
 		controls hats {
 			white-space: nowrap;
@@ -573,26 +604,7 @@
         speechSynthesis.cancel();
         stopTalking = true;
     }
-</script>
-<script>
-    "use strict";
-    "use strict";
 
-    function setupScrollEvents(el) {
-        let timer, pre_direction = 0;
-        el.addEventListener('scroll', () => {
-            clearTimeout(timer);
-            let post_direction = el.pageYOffset, _target = el;
-            if (post_direction > pre_direction) { _target.dispatchEvent(new Event('scrollDown')); }
-            else if (pre_direction > post_direction) { _target.dispatchEvent(new Event('scrollUp')); }
-
-            timer = setTimeout(() => _target.dispatchEvent(new Event('scrollStop')), 300);
-            pre_direction = post_direction;
-        }, false);
-    }
-</script>
-<script>
-	"use strict";
 	const initialFontSize = parseInt(window.getComputedStyle(document.getElementsByTagName("pages")[0]).fontSize);
 	let youLike = false;
     let likesDialog;
@@ -618,10 +630,15 @@
         }, {passive: true});
 
         let pages = document.getElementsByTagName("pages")[0];
-        setupScrollEvents(pages);
-        pages.addEventListener("touchstart", () => pages.style.overflowX = 'auto', {passive: true});
-        pages.addEventListener("touchend", () => pages.style.overflowX = '', {passive: true});
-        pages.addEventListener("scrollStop", () => requestAnimationFrame(snapToNearestPage));
+        var scrollEndTimout;
+        pages.addEventListener("touchstart", () => pages.style.overflowX = 'scroll', {passive: true});
+        pages.addEventListener('scroll', () => {
+            clearTimeout(scrollEndTimout);
+            scrollEndTimout = setTimeout(() => {
+				pages.style.overflowX = '';
+				snapToNearestPage();
+            }, 300);
+		}, {passive: true});
 
         window.addEventListener("resize", () => scrollToPage(currentPage, false), {passive: true});
     }
