@@ -11,7 +11,7 @@
     <style>
 		
     </style>
-	<script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+	<script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
 	<script src="https://unpkg.com/aframe-event-set-component@^4.0.0/dist/aframe-event-set-component.min.js"></script>
 	<script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
 	<script src="https://unpkg.com/aframe-room-component/dist/aframe-room-component.min.js"></script>	
@@ -32,18 +32,18 @@
         <rw-floor material="color: #e9e0b1"></rw-floor>
         <rw-ceiling material="color:#c6a7bf" light="type: hemisphere; intensity: 0.3; color: #e9e0b1" ></rw-ceiling>
         
-	    <a-camera position="3 0 4.5">
+	    <a-camera position="3 1 4.5">
 			<a-cursor></a-cursor>
 			<a-entity laser-controls line="color: red; opacity: 0.75"></a-entity>
 		</a-camera>
 		
 		<a-entity  position="6 1 1.5">
-			<a-sphere radius=".5" color="#157cd4"></a-sphere>
+			<a-sphere radius=".5" src="earth-map.jpg"></a-sphere>
 			<a-animation attribute="rotation"
-				dur="10000"
+				dur="6000"
 				fill="forwards"
 				to="0 360 0"
-				repeat="indefinite"></a-animation>
+				repeat="indefinite" easing="linear"></a-animation>
 		</a-entity>
 		
 		<a-box id="thebox" position="1 0.5 3" rotation="0 45 0" color="#4CC3D9" ></a-box>
