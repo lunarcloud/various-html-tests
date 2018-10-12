@@ -619,6 +619,7 @@
             let navigations = document.querySelectorAll("main navigation");
             for (let i = 0; i < navigations.length; i++) navigations[i].style.display = 'none';
         }
+		setCurrentPage(1);
         scrollToPage(1);
 
         likesDialog = document.getElementById("likes-dialog");
@@ -633,8 +634,9 @@
 
         let pages = document.getElementsByTagName("pages")[0];
         var scrollEndTimout;
+		pages.addEventListener('touchstart', (evt) => 
+			pages.style.overflowX = 'auto');
         pages.addEventListener('scroll', (evt) => {
-			pages.style.overflowX = 'scroll';
             clearTimeout(scrollEndTimout);
             scrollEndTimout = setTimeout(() => {
 				pages.style.overflowX = 'hidden';
@@ -668,8 +670,8 @@
 	}
 	
     function scrollToPage(index, andWindowTop) {
-        
-		setCurrentPage(index);
+        if (totalPages === 1 || index < 1 || index > totalPages) return;
+		//setCurrentPage(index); // handled by scroll event handler
         let pages = document.getElementsByTagName("pages")[0];
         let page = document.querySelector("page:nth-child(" + index + ")");
         const x = page.getBoundingClientRect().left - pages.getBoundingClientRect().left + pages.scrollLeft;
