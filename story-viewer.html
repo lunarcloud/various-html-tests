@@ -126,16 +126,18 @@
 			flex-direction: row;
 			overflow-x: hidden;
             scroll-behavior: smooth;
+			scroll-snap-type-x: mandatory;
+			scroll-snap-type: x mandatory;
+			scroll-snap-stop: always;
+			scroll-snap-points-x: repeat(100%);
 		}
 
 		page {
+			width: 100%;
+			flex-shrink: 0;
 			padding: 2px 6px;
             scroll-behavior: smooth;
-		}
-
-		page {
-			width: calc(100% - 10px);
-			flex-shrink: 0;
+			scroll-snap-align: start;
 		}
 
 		authors a {
@@ -631,15 +633,14 @@
 
         let pages = document.getElementsByTagName("pages")[0];
         var scrollEndTimout;
-        pages.addEventListener("touchstart", () => pages.style.overflowX = 'scroll', {passive: true});
-        pages.addEventListener('scroll', () => {
+        pages.addEventListener('scroll', (evt) => {
+			pages.style.overflowX = 'scroll';
             clearTimeout(scrollEndTimout);
             scrollEndTimout = setTimeout(() => {
-				pages.style.overflowX = '';
-				snapToNearestPage();
+				pages.style.overflowX = 'hidden';
+				detectCurrentPage();
             }, 300);
 		}, {passive: true});
-
         window.addEventListener("resize", () => scrollToPage(currentPage, false), {passive: true});
     }
 
@@ -657,14 +658,18 @@
         scrollToPage(1);
 	}
 
-    function scrollToPage(index, andWindowTop) {
-        if (totalPages === 1 || index < 1 || index > totalPages) return;
+	function setCurrentPage(index) {
+		if (totalPages === 1 || index < 1 || index > totalPages) return;
         currentPage = index;
         document.getElementById("page-prev").disabled = currentPage <= 1;
         document.getElementById("page-prev-mini").disabled = currentPage <= 1;
         document.getElementById("page-next").disabled = currentPage >= totalPages;
         document.getElementById("page-next-mini").disabled = currentPage >= totalPages;
-
+	}
+	
+    function scrollToPage(index, andWindowTop) {
+        
+		setCurrentPage(index);
         let pages = document.getElementsByTagName("pages")[0];
         let page = document.querySelector("page:nth-child(" + index + ")");
         const x = page.getBoundingClientRect().left - pages.getBoundingClientRect().left + pages.scrollLeft;
@@ -678,7 +683,7 @@
 		requestAnimationFrame(() => window.scroll({ top: y, behavior: 'smooth', passive: true }));
 	}
 
-	function snapToNearestPage() {
+	function detectCurrentPage() {
         let pages = document.getElementsByTagName("pages")[0];
         const pagesPosition = pages.scrollLeft;
         let pageList = pages.querySelectorAll("page");
@@ -693,7 +698,7 @@
                 closestPage = i + 1;
             }
         }
-        scrollToPage(closestPage, false);
+		setCurrentPage(closestPage)
     }
 
     function toggleTTS() {
