@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Basic Page Needs
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    <title>Side Tab Navigation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="theme-color" content="white" />
+
+    <!-- Mobile Specific Metas
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONT
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- CSS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+    <!-- Favicon
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="icon" type="image/png" href="https://placehold.it/32x32">
+
+    <style>
+		body {
+            max-width: 100vw;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        body > navigation {
+			background-color: #222;
+			color: white;
+			width: 100%;
+			margin: 0;
+			padding: 0;
+			height: 36px;
+        }
+
+		navigation, main {
+            display: block;
+		}
+
+		other-inline {
+            display: inline-block;
+		}
+
+		dialog {
+		  position: fixed;
+		  top: 50%;
+		  transform: translate(0, -50%);
+		}
+
+		templates {
+			display: none;
+		}
+
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+        }
+
+        .pointer {
+            cursor: pointer;
+        }
+
+        footer {
+            border-top: 1px solid black;
+            margin-top: 20px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        @media print {
+			navigation {
+				display: none;
+			}
+        }
+		
+		/*-------------  --------------*/
+
+		#event-content {
+			margin-top: 2px;
+			
+			display: -ms-grid;
+			-ms-grid-columns: 125px 1fr;
+			-ms-grid-rows: 0px 1fr;
+			display: grid;
+			grid-template-columns: 125px 1fr;
+			grid-template-rows: 0px 1fr; /* row 1 is invisible */
+		}
+		
+		#event-nav {
+			-ms-grid-row: 2;
+			-ms-grid-column: 1;
+			grid-row: 2;
+			grid-column: 1;
+		}
+		
+		#event-content section {
+			-ms-grid-row: 1;
+			-ms-grid-column: 2;
+			grid-row: 1; /* invisible by default */
+			grid-column: 2;
+		}
+		
+		#event-content[view=home] #event-home,
+		#event-content[view=tickets] #event-tickets,
+		#event-content[view=schedule] #event-schedule,
+		#event-content[view=contact] #event-contact {
+			-ms-grid-row: 2 !important;
+			grid-row: 2 !important; /* visible when selected */
+		}
+		
+		#event-nav label {
+			display: block;
+			
+			text-align: right;
+			
+			margin-left: 4px;
+			padding-bottom: 12px;
+			padding-right: 4px;
+			
+			border: 1px solid black;
+			border-radius: 8px 0 0 8px;
+		}
+				
+		#event-nav label:not(:last-child) {
+			margin-bottom: 4px;
+		}
+		
+		#event-nav label input[type=radio] {
+			display: none;
+		}
+		
+		#event-content section {
+		
+			border: 1px solid black;
+			border-top-width: 0px;
+			border-left: none;
+		}
+		
+		#event-content[view=home] #tab-home {
+			border-right-color: #cccccc;
+		}
+		#tab-home,
+		#event-home {
+			background-color: #cccccc;
+		}
+		
+		#event-content[view=tickets] #tab-tickets {
+			border-right-color: #cccc3c !important;
+		}
+		#tab-tickets,
+		#event-tickets {
+			background-color: #cccc3c;
+		}
+		
+		#event-content[view=schedule] #tab-schedule {
+			border-right-color: #cc3ccc !important;
+		}
+		#tab-schedule,
+		#event-schedule {
+			background-color: #cc3ccc;
+		}
+		
+		#event-content[view=contact] #tab-contact {
+			border-right-color: #3ccccc !important;
+		}
+		#tab-contact,
+		#event-contact {
+			background-color: #3ccccc;
+		}
+		
+    </style>
+</head>
+<body onload="onLoad()" class="">
+	<navigation>&nbsp;</navigation>
+    <main>
+        <content id="event-content" view="home">
+			<nav id="event-nav">
+				<label id="tab-home">
+					Home
+					<input type="radio" name="view" value="home" checked >
+				</label>
+				<label id="tab-tickets">
+					Tickets
+					<input type="radio" name="view" value="tickets" >
+				</label>
+				<label id="tab-schedule">
+					Schedule
+					<input type="radio" name="view" value="schedule" >
+				</label>
+				<label id="tab-contact">
+					Contact
+					<input type="radio" name="view" value="contact" >
+				</label>
+			</nav>
+			<section id="event-home">
+			</section>
+			<section id="event-tickets">
+			</section>
+			<section id="event-schedule">
+			</section>
+			<section id="event-contact">
+			</section>
+		</content>
+    </main>
+
+    <footer>
+        &copy; Samuel Sarette 2018
+    </footer>
+
+	<templates>
+	</templates>
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<script>
+    "use strict";
+
+    function onLoad() {
+		
+		let eventNav = document.getElementById("event-nav");
+		let viewSelectors = eventNav.querySelectorAll("input[type=radio]");
+		for (let i = 0; i < viewSelectors.length; i++) {
+			viewSelectors[i].addEventListener('change', function() {
+				let viewSelected = eventNav.querySelector("input[type=radio]:checked").value;
+				document.getElementById('event-content').setAttribute('view', viewSelected);
+			});
+		}
+    }
+
+	function smoothScrollTo(element) {
+        if (typeof(element) === "string") element = document.querySelector(element);
+		const y = element.getBoundingClientRect().top + window.scrollY;
+		requestAnimationFrame(function() {
+			window.scroll({ top: y, behavior: 'smooth', passive: true })
+		});
+	}
+
+    function printPage() {
+		window.print();
+		return false;
+    }
+
+</script>
+</body>
+</html>
