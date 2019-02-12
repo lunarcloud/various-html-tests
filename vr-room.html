@@ -9,18 +9,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <style>
-		
+
     </style>
-	<script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
 	<script src="https://unpkg.com/aframe-event-set-component@^4.0.0/dist/aframe-event-set-component.min.js"></script>
 	<script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
-	<script src="https://unpkg.com/aframe-room-component/dist/aframe-room-component.min.js"></script>	
+	<script src="https://unpkg.com/aframe-room-component/dist/aframe-room-component.min.js"></script>
 </head>
 <body>
 	<a-scene>
 	  <a-entity environment="preset: arches; playArea: 8;"></a-entity>
-		
-      <rw-room position="-5 0.01 -5" width="8" length="6" material="color:#a162a8">
+
+
+    <a-camera position="0 1.5 0">
+        <a-cursor></a-cursor>
+        <a-entity laser-controls line="color: red; opacity: 0.75"></a-entity>
+    </a-camera>
+
+      <rw-room position="-3 0.01 -5" width="8" length="6" material="color:#a162a8">
         <rw-wall>
 		  <a-text value="Hello, VR!" color="#BBB" position="1 1.5 0" scale="1.5 1.5 1.5"></a-text>
           <rw-doorhole id="frontInner" shadow="cast: true" ></rw-doorhole>
@@ -28,15 +34,10 @@
         <rw-wall></rw-wall>
         <rw-wall></rw-wall>
         <rw-wall></rw-wall>
-        
+
         <rw-floor material="color: #e9e0b1"></rw-floor>
         <rw-ceiling material="color:#c6a7bf" light="type: hemisphere; intensity: 0.3; color: #e9e0b1" ></rw-ceiling>
-        
-	    <a-camera position="3 1 4.5">
-			<a-cursor></a-cursor>
-			<a-entity laser-controls line="color: red; opacity: 0.75"></a-entity>
-		</a-camera>
-		
+
 		<a-entity  position="6 1 1.5">
 			<a-sphere radius=".5" src="earth-map.jpg"></a-sphere>
 			<a-animation attribute="rotation"
@@ -45,12 +46,12 @@
 				to="0 360 0"
 				repeat="indefinite" easing="linear"></a-animation>
 		</a-entity>
-		
+
 		<a-box id="thebox" position="1 0.5 3" rotation="0 45 0" color="#4CC3D9" ></a-box>
       </rw-room>
-	  
-            
-      <rw-room position="-5 0 -5" width="8" length="6" outside="true" material="color:#877" shadow="cast: true">
+
+
+      <rw-room position="-3 0 -5" width="8" length="6" outside="true" material="color:#877" shadow="cast: true">
         <rw-wall></rw-wall>
         <rw-wall>
           <rw-doorhole id="frontOuter"></rw-doorhole>
@@ -59,22 +60,22 @@
         </rw-wall>
         <rw-wall></rw-wall>
         <rw-wall></rw-wall>
-        
+
       </rw-room>
-	  
+
     </a-scene>
-	
+
     <script>
-	
+
 		//event-set__click="material.color: red; scale: 1 1.5 1"
 		var init = function() {
 			"use strict";
-				
+
 			var box = document.getElementById('thebox');
-			
+
 			box.addEventListener('click', function (evt) {
 				console.debug("clicked!");
-				
+
 				if (box.getAttribute("color") == "red") {
 					box.setAttribute("color", "#4CC3D9");
 					box.setAttribute("scale", "1 1 1");
@@ -83,7 +84,7 @@
 					box.setAttribute("scale", "1 1.5 1");
 				}
 			});
-		
+
 		};
 
 		window.addEventListener( 'DOMContentLoaded', init, false);
